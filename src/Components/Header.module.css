@@ -1,0 +1,137 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid #5252F1;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.searchIcon {
+  color: #007bff;
+  margin-right: 8px;
+}
+
+.searchInput {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.notificationIcon {
+  position: relative;
+  cursor: pointer;
+  color: #007bff;
+  font-size: 20px;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+
+.notificationDropdown {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.notificationItem {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.notificationItem:last-child {
+  border-bottom: none;
+}
+
+.notificationMessage {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.notificationTimestamp {
+  font-size: 12px;
+  color: #666;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.userName {
+  margin-right: 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.userInitials {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #001A87;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .searchBox {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .rightSection {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .notificationDropdown {
+    right: 10px;
+    width: 250px;
+  }
+}

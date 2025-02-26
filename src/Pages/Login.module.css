@@ -1,0 +1,152 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;  /* Enables wrapping on smaller screens */
+  height: 100vh;
+  align-items: center;
+  justify-content: center;  /* Center on smaller screens */
+  background-color: #fff;
+  padding: 20px;
+}
+
+/* Logo Section */
+.logoContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Centers the logo on small screens */
+  align-items: center;
+  background-color: #fff;
+  height: auto;
+  padding: 100px;
+}
+
+.logoName {
+  color: #001A87;
+  text-shadow: 2px 2px 4px rgba(145 144 144 / 0.5);
+}
+ 
+.logo {
+  max-width: 180px;  /* Adjusted for responsiveness */
+  height: auto;
+}
+
+/* Form Section */
+.formContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: transparent;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: 300px;
+}
+
+.form {
+  width: 150%; /* Adjusts to container size */
+  max-width: 700px; /* Limits width for readability */
+  background: transparent;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* Form Inputs */
+.formGroup {
+  margin-bottom: 15px;
+  padding: 20px;
+}
+
+.input {
+  border: none;
+  border-bottom: 2px solid #00000032;  
+  outline: none;  
+  font-size: 16px;
+  padding: 5px;
+  width: 100%;
+  background: transparent; 
+}
+
+.label {
+  color: #0000003D;
+}
+
+/* Button */
+.button {
+  width: 100%;
+  max-width: 700px; 
+  height: 70px;
+  padding: 10px;
+  background-color: #001A87;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 20px;
+  margin-top: 40px;
+}
+
+/* Links */
+.link {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.linkItem {
+  text-decoration: none;
+  color: #242CC3FB;
+}
+
+/* ----------- RESPONSIVENESS ----------- */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .container {
+      flex-direction: column;
+      height: auto; 
+      text-align: center;
+  }
+
+  .logoContainer {
+      padding-left: 0;
+  }
+
+  .formContainer {
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+  }
+
+  .form {
+      max-width: 500px;
+  }
+
+  .button {
+      font-size: 18px;
+      height: 55px;
+  }
+}
+
+/* Mobile Devices (480px and below) */
+@media (max-width: 480px) {
+  .form {
+      max-width: 100%;
+  }
+
+  .formGroup {
+      padding: 10px;
+  }
+
+  .button {
+      font-size: 16px;
+      height: 50px;
+  }
+
+  .logo {
+      max-width: 150px;
+  }
+}

@@ -1,0 +1,38 @@
+.dashboard {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .mainContent {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f9;
+    overflow-y: auto;
+  }
+  
+  .footer {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .createTicketButton {
+    padding: 10px 20px;
+    background-color: #21177A;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 35px;
+    position: absolute;
+    bottom: 30px;
+    right: 90px;
+  }
+  
+  .createTicketButton:hover {
+    background-color: #0056b3;
+  }

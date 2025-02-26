@@ -1,0 +1,97 @@
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 20px;
+  background-color: #f4f4f9;
+  overflow-y: auto;
+}
+
+.filterSection {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dateFilter {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.calendarContainer {
+  display: inline-block;
+}
+
+.calendar {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filteroption {
+  padding-bottom: 8px;
+}
+
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+  margin-right: 40px;
+}
+
+.statBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #d9d9d9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 200px;
+  gap: 20px;
+}
+
+.statValue {
+  font-size: 90px;
+  font-weight: 500;
+  color: #333333;
+}
+
+.statLabel {
+  margin-top: -40px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .filterSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dateFilter,
+  .calendar {
+    width: 100%;
+  }
+}
