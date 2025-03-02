@@ -1,11 +1,11 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"], // Ensure Tailwind scans your files
+  content: ["./src/**/*.{js,jsx,ts,tsx}"], // Ensure Tailwind scans all files
   theme: {
     extend: {
       fontFamily: {
-        poppins: ["Poppins", "sans-serif"]
-      }
-    }
+        sans: ["Roboto", "Helvetica Neue", "sans-serif"], // Set as default sans-serif
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };

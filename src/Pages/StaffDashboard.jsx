@@ -5,10 +5,12 @@ import Header from '../Components/Header';
 import toast, { Toaster } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import styles from './TrackAndViewTickets.module.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const StaffDashboard = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [ticketStats, setTicketStats] = useState({
     totalNumber: 0,
@@ -20,6 +22,7 @@ const StaffDashboard = () => {
   const [latestTickets, setLatestTickets] = useState([]);
   const [filter, setFilter] = useState('none');
   const [selectedDate, setSelectedDate] = useState(null);
+
 
   useEffect(() => {
     fetchLatestTickets();
@@ -69,7 +72,7 @@ const StaffDashboard = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5215/api/ticket/Ticket/filter', {
+      const response = await fetch('http://localhost:5215/api/ticket/Ticket/filter?filter=none', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -80,29 +83,33 @@ const StaffDashboard = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch latest tickets');
       }
+
       const data = await response.json();
+      // Sort tickets by createdAt date (newest first)
       const sortedTickets = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
       setLatestTickets(sortedTickets);
     } catch (error) {
       toast.error(error.message || 'Failed to load latest tickets');
     }
+
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100" >
       <Toaster />
       <Sidebar />
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 px-16 overflow-y-auto">
         <Header user={user} />
-        
+
         {/* Filter Section */}
-        <div className="flex items-center gap-4 bg-white p-4 rounded-lg shadow-md border border-gray-200 mt-4">
+        {/* Filter Section */}
+        <div className="flex items-center gap-4 p-2 rounded-lg border-gray-200 mt-4">
           <label className="text-gray-700 font-medium">Filter by:</label>
 
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-fit px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           >
             <option value="none">None</option>
             <option value="day">Day</option>
@@ -116,31 +123,99 @@ const StaffDashboard = () => {
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              className="w-[140px] px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholderText="Select a date"
             />
           )}
+
+
+          {/* Create Ticket Button */}
+          <button
+            onClick={() => navigate('/create-ticket')} // Replace with your navigation logic
+            className="ml-auto px-4 py-2 bg-blue-900 text-white rounded-md shadow-md hover:bg-blue-700 transition"
+          >
+            Create Ticket
+          </button>
+
         </div>
-        
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-          <div className="flex flex-col items-center justify-center bg-gray-200 p-6 rounded-lg shadow-lg text-center">
+
+        <div className="grid w-full mt-8 gap-9 
+                grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+          <div className="flex flex-col items-center justify-center bg-gray-200 
+                  min-w-[200px] max-w-[350px] h-[133px] 
+                  rounded-lg shadow-lg text-center gap-2">
             <span className="text-lg font-semibold text-gray-700">Total Tickets</span>
             <span className="text-4xl font-bold text-gray-900">{ticketStats.totalNumber}</span>
           </div>
-          <div className="flex flex-col items-center justify-center bg-green-200 p-6 rounded-lg shadow-lg text-center">
+          <div className="flex flex-col items-center justify-center bg-gray-200 
+                  min-w-[200px] max-w-[350px] h-[133px] 
+                  rounded-lg shadow-lg text-center gap-2">
             <span className="text-lg font-semibold text-gray-700">Active Tickets</span>
             <span className="text-4xl font-bold text-gray-900">{ticketStats.activelNumber}</span>
           </div>
-          <div className="flex flex-col items-center justify-center bg-yellow-100 p-6 rounded-lg shadow-lg text-center">
+          <div className="flex flex-col items-center justify-center bg-gray-200 
+                  min-w-[200px] max-w-[350px] h-[133px] 
+                  rounded-lg shadow-lg text-center gap-2">
             <span className="text-lg font-semibold text-gray-700">Not Active Tickets</span>
             <span className="text-4xl font-bold text-gray-900">{ticketStats.notActiveNumber}</span>
           </div>
-          <div className="flex flex-col items-center justify-center bg-blue-200 p-6 rounded-lg shadow-lg text-center">
+          <div className="flex flex-col items-center justify-center bg-gray-200 
+                  min-w-[200px] max-w-[350px] h-[133px] 
+                  rounded-lg shadow-lg text-center gap-2">
             <span className="text-lg font-semibold text-gray-700">Completed Tickets</span>
             <span className="text-4xl font-bold text-gray-900">{ticketStats.completedNumber}</span>
           </div>
         </div>
+
+
+        {/* Latest Tickets Section */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold text-gray-800">Recent Tickets</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            {latestTickets.length > 0 ? (
+              latestTickets.map((ticket) => (
+                <div
+                  key={ticket.id}
+                  className="bg-white p-5 rounded-xl shadow-md border border-gray-300 flex flex-col gap-3 cursor-pointer 
+                     transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl 
+                     hover:border-blue-500 hover:ring-2 hover:ring-blue-500 hover:ring-opacity-50"
+                  onClick={() => navigate(`/get_ticket_by_id/${ticket.ticketId}`)}
+                >
+                  <div className="flex justify-end">
+                    <span
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold ${ticket.status === 'ACTIVE'
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : ticket.status === 'COMPLETED'
+                          ? 'bg-green-100 text-green-600'
+                          : 'bg-red-100 text-red-600'
+                        }`}
+                    >
+                      {ticket.status === 'ACTIVE'
+                        ? 'Pending'
+                        : ticket.status === 'NOT_ACTIVE'
+                          ? 'Unassigned'
+                          : ticket.status === 'COMPLETED'
+                            ? 'Completed'
+                            : ticket.status}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-800">{ticket.subject}</h3>
+                  <hr className="border-gray-300" />
+                  <div className="text-sm text-gray-600 grid grid-cols-2 gap-2">
+                    <p><span className="font-semibold">Ticket ID:</span> {ticket.ticketId}</p>
+                    <p><span className="font-semibold">Date:</span> {new Date(ticket.createdAt).toLocaleDateString()}</p>
+                    <p><span className="font-semibold">Priority:</span> {ticket.priority}</p>
+                    <p><span className="font-semibold">Type:</span> {ticket.category}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No recent tickets available.</p>
+            )}
+
+          </div>
+        </div>
+
       </div>
     </div>
   );

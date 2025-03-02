@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaBell } from 'react-icons/fa';
-import styles from './Header.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ user }) => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
-  // Mock real-time notifications
   useEffect(() => {
     const fetchNotifications = () => {
-      // Simulate real-time notifications
       const mockNotifications = [
         { id: 1, message: 'Your ticket #123 has been resolved.', timestamp: '2 mins ago' },
         { id: 2, message: 'New ticket #124 has been submitted.', timestamp: '10 mins ago' },
@@ -19,16 +20,46 @@ const Header = ({ user }) => {
     };
 
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 60000); // Refresh every 60 seconds
+    const interval = setInterval(fetchNotifications, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // Function to get initials from the user's name
-  const getInitials = (name) => {
-    if (!name) return 'GU'; // Default initials if name is not provided
-    const names = name.split(' ');
-    const initials = names.map((n) => n[0]).join('');
-    return initials.toUpperCase();
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) return;
+
+        const response = await fetch('http://localhost:5215/api/Employees/get_employee_id', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch user data');
+
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const getInitials = (firstName, lastName) => {
+    if (!firstName || !lastName) return 'GU';
+    return `${firstName[0]}${lastName[0]}`.toUpperCase();
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/get_ticket_by_id/${searchQuery.trim()}`);
+    }
   };
 
   const toggleNotifications = () => {
@@ -36,33 +67,43 @@ const Header = ({ user }) => {
   };
 
   return (
-    <div className={styles.header}>
-      <div className={styles.searchBox}>
-        <FaSearch className={styles.searchIcon} />
-        <input type="text" placeholder="Search Ticket ID" className={styles.searchInput} />
-      </div>
-      <div className={styles.rightSection}>
-        <div className={styles.notificationIcon} onClick={toggleNotifications}>
+    <div className="flex items-center justify-between p-2 border-b border-[#5252F1] bg-slate-100 z-50">
+
+      <form onSubmit={handleSearch} className="flex items-center bg-white px-2 py-1 rounded-md">
+        <FaSearch className="text-[#007bff] mr-2" />
+        <input
+          type="text"
+          placeholder="Search Ticket ID"
+          className="bg-transparent outline-none text-sm"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </form>
+      <div className="flex items-center gap-12 relative">
+        <div className="relative cursor-pointer text-[#007bff] text-lg" onClick={toggleNotifications}>
           <FaBell />
           {notifications.length > 0 && (
-            <span className={styles.notificationBadge}>{notifications.length}</span>
+            <span className="absolute top-0 right-0 bg-red-600 text-xs text-white rounded-full px-1.5">{notifications.length}</span>
           )}
         </div>
         {showNotifications && (
-          <div className={styles.notificationDropdown}>
+          <div className="absolute top-12 right-5 bg-white border border-gray-300 rounded-md shadow-md w-72 max-h-96 overflow-y-auto z-50">
             {notifications.map((notification) => (
-              <div key={notification.id} className={styles.notificationItem}>
-                <p className={styles.notificationMessage}>{notification.message}</p>
-                <span className={styles.notificationTimestamp}>{notification.timestamp}</span>
+              <div key={notification.id} className="p-3 border-b border-gray-200 last:border-none">
+                <p className="text-sm font-medium text-gray-800">{notification.message}</p>
+                <span className="text-xs text-gray-600">{notification.timestamp}</span>
               </div>
             ))}
           </div>
         )}
-        <div className={styles.userInfo}>
-        <div className={styles.userInitials}>
-          {getInitials(user?.profile?.name)}
+        <div className="flex items-center gap-3">
+          <div
+            className="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold bg-blue-900"
+            
+          >
+            {getInitials(userData?.first_name, userData?.last_name)}
           </div>
-          <span className={styles.userName}>{user?.profile?.name || 'Guest User'}</span>
+          <span className="text-sm font-bold text-gray-800">{userData ? `${userData.first_name} ${userData.last_name}` : 'Guest User'}</span>
         </div>
       </div>
     </div>

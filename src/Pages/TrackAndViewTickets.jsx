@@ -1,115 +1,200 @@
-import React, { useState, useEffect } from 'react';
-import styles from './TrackAndViewTickets.module.css';
+import React, { useState, useEffect, useContext } from 'react';
 import Sidebar from '../Components/Sidebar';
+import { AuthContext } from '../Context/AuthContext';
 import Header from '../Components/Header';
+import toast, { Toaster } from 'react-hot-toast';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const TrackAndViewTickets = () => {
-  const [selectedStatus, setSelectedStatus] = useState(null);
-  const [tickets, setTickets] = useState({
-    unassigned: [
-      { id: 2345678, description: 'Printer not working', status: 'unassigned', type: 'Hardware', date: '12/02/2025' },
-      { id: 7994532, description: 'Process Maker not working', status: 'unassigned', type: 'Software', date: '13/02/2025' },
-      { id: 5555610, description: 'Laptop screen is broken', status: 'unassigned', type: 'Hardware', date: '14/02/2025' },
-    ],
-    assigned: [
-      { id: 1234567, description: 'Email not syncing', status: 'assigned', type: 'Software', date: '15/02/2025' },
-    ],
-    resolved: [
-      { id: 9876543, description: 'Network connection issue', status: 'resolved', type: 'Network', date: '10/02/2025' },
-    ],
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [ticketStats, setTicketStats] = useState({
+    totalNumber: 0,
+    activelNumber: 0,
+    notActiveNumber: 0,
+    completedNumber: 0
   });
 
-  // Simulate real-time updates
+  const [latestTickets, setLatestTickets] = useState([]);
+  const [filter, setFilter] = useState(searchParams.get('filter') || 'none');
+  const [selectedDate, setSelectedDate] = useState(searchParams.get('date') ? new Date(searchParams.get('date')) : null);
+  const [selectedStatus, setSelectedStatus] = useState(searchParams.get('status') || '');
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTickets((prevTickets) => {
-        const newTickets = { ...prevTickets };
+    fetchTicketStats();
+    fetchLatestTickets();
+  }, [filter, selectedDate, selectedStatus]);
 
-        // Randomly add a new unassigned ticket
-        if (Math.random() > 0.5) {
-          const newTicket = {
-            id: Math.floor(Math.random() * 10000000),
-            description: 'New issue reported',
-            status: 'unassigned',
-            type: Math.random() > 0.5 ? 'Hardware' : 'Software',
-            date: new Date().toLocaleDateString(),
-          };
-          newTickets.unassigned.push(newTicket);
-        }
-
-        // Randomly move a ticket from unassigned to assigned
-        if (newTickets.unassigned.length > 0 && Math.random() > 0.5) {
-          const movedTicket = newTickets.unassigned.shift();
-          movedTicket.status = 'assigned';
-          newTickets.assigned.push(movedTicket);
-        }
-
-        // Randomly move a ticket from assigned to resolved
-        if (newTickets.assigned.length > 0 && Math.random() > 0.5) {
-          const movedTicket = newTickets.assigned.shift();
-          movedTicket.status = 'resolved';
-          newTickets.resolved.push(movedTicket);
-        }
-
-        return newTickets;
-      });
-    }, 300000); // Update every 60 seconds
-
-    return () => clearInterval(interval); // Cleanup interval on unmount
-  }, []);
-
-  const handleStatusClick = (status) => {
-    setSelectedStatus(status);
+  const updateURLParams = (newFilter, newDate, newStatus) => {
+    const params = new URLSearchParams();
+    params.set('filter', newFilter);
+    if (newFilter === 'set' && newDate) {
+      params.set('date', newDate.toISOString().split('T')[0]); // Format YYYY-MM-DD
+    }
+    if (newStatus) {
+      params.set('status', newStatus);
+    }
+    setSearchParams(params);
   };
 
+  const fetchTicketStats = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        toast.error('User not authenticated');
+        return;
+      }
+
+      let url = `http://localhost:5215/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
+      if (filter === 'set' && selectedDate) {
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        url += `&date=${formattedDate}`;
+      }
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch ticket stats');
+      }
+
+      const data = await response.json();
+      setTicketStats(data);
+    } catch (error) {
+      toast.error(error.message || 'Failed to load ticket stats');
+    }
+  };
+
+  const fetchLatestTickets = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        toast.error('User not authenticated');
+        return;
+      }
+
+      let url = `http://localhost:5215/api/ticket/Ticket/filter?filter=${filter}`;
+      if (selectedStatus) {
+        url += `&status=${selectedStatus}`;
+      }
+      if (filter === 'set' && selectedDate) {
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        url += `&date=${formattedDate}`;
+      }
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch latest tickets');
+      }
+
+      const data = await response.json();
+      const sortedTickets = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setLatestTickets(sortedTickets); // ✅ Removed `.slice(0, 6)` to return all results
+    } catch (error) {
+      toast.error(error.message || 'Failed to load latest tickets');
+    }
+  };
+
+
   return (
-    <div className={styles.dashboard}>
-      <Sidebar/>
-      <div className={styles.mainContent}>
-        <Header/>
-        <div className={styles.statusBoxes}>
-          <div
-            className={`${styles.statusBox} ${selectedStatus === 'unassigned' ? styles.active : ''}`}
-            onClick={() => handleStatusClick('unassigned')}
+    <div className="flex h-screen bg-gray-100">
+      <Toaster />
+      <Sidebar />
+      <div className="flex-1 p-6 px-16 overflow-y-auto scrollbar-thin scrollbar-thumb-hidden  scrollbar-track-hidden">
+
+        <Header user={user} />
+
+        {/* Filter Section */}
+        <div className="flex items-center gap-4 p-2 rounded-lg border-gray-200 mt-4">
+          <label className="text-gray-700 font-medium">Filter by:</label>
+
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="w-fit px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           >
-            <span className={styles.statusCount}>{tickets.unassigned.length}</span>
-            <span className={styles.statusLabel}>Unassigned</span>
-          </div>
-          <div
-            className={`${styles.statusBox} ${selectedStatus === 'assigned' ? styles.active : ''}`}
-            onClick={() => handleStatusClick('assigned')}
-          >
-            <span className={styles.statusCount}>{tickets.assigned.length}</span>
-            <span className={styles.statusLabel}>Assigned</span>
-          </div>
-          <div
-            className={`${styles.statusBox} ${selectedStatus === 'resolved' ? styles.active : ''}`}
-            onClick={() => handleStatusClick('resolved')}
-          >
-            <span className={styles.statusCount}>{tickets.resolved.length}</span>
-            <span className={styles.statusLabel}>Resolved</span>
-          </div>
+            <option value="none">None</option>
+            <option value="day">Day</option>
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+            <option value="set">Set Date</option>
+          </select>
+
+          {filter === 'set' && (
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              dateFormat="yyyy-MM-dd"
+              className="w-[140px] px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              placeholderText="Select a date"
+            />
+          )}
         </div>
-        <div className={styles.ticketDetails}>
-          {selectedStatus ? (
-            tickets[selectedStatus].map((ticket) => (
-              <div key={ticket.id} className={styles.ticketBox}>
-                <p><strong>ID: {ticket.id}</strong></p>
-                <p>Description: {ticket.description}</p>
-                <div className={styles.styledBox}>
-                    <p>Status: {ticket.status}</p>
-                </div>
-                <div className={styles.styledBox}>
-                    <p>Type: {ticket.type}</p>
-                </div>
-                <div className={styles.styledBox}>
-                    <p>Date: {ticket.date}</p>
+
+        {/* Status Boxes */}
+        <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+          {[
+            { label: 'Total Tickets', value: ticketStats.totalNumber, status: '' },
+            { label: 'Active Tickets', value: ticketStats.activelNumber, status: 'ACTIVE' },
+            { label: 'Not Active Tickets', value: ticketStats.notActiveNumber, status: 'NOT_ACTIVE' },
+            { label: 'Completed Tickets', value: ticketStats.completedNumber, status: 'COMPLETED' }
+          ].map(({ label, value, status }) => (
+            <div
+              key={label}
+              className={`flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2 cursor-pointer ${selectedStatus === status ? 'border-2 border-blue-500' : ''
+                }`}
+              onClick={() => {
+                const newStatus = status === selectedStatus ? '' : status;
+                setSelectedStatus(newStatus);
+                updateURLParams(filter, selectedDate, newStatus);
+              }}
+            >
+              <span className="text-lg font-semibold text-gray-700">{label}</span>
+              <span className="text-4xl font-bold text-gray-900">{value}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Ticket List */}
+        <div className="mt-10 h-3/5 overflow-y-auto border-t border-gray-300 rounded-lg p-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+          {latestTickets.length > 0 ? (
+            latestTickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                className="flex flex-col gap-2 bg-white shadow-md rounded-lg p-4 mb-4"
+                onClick={() => navigate(`/get_ticket_by_id/${ticket.ticketId}`)}
+              >
+                <p className="font-bold">ID: {ticket.ticketId}</p>
+                <p>Description: {ticket.subject}</p>
+                <div className="flex gap-2">
+                  <span className="bg-gray-200 px-2 py-1 rounded-lg font-medium">Status: {ticket.status}</span>
+                  <span className="bg-gray-200 px-2 py-1 rounded-lg font-medium">Type: {ticket.category}</span>
+                  <span className="bg-gray-200 px-2 py-1 rounded-lg font-medium">
+                    Date: {new Date(ticket.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
             ))
           ) : (
-            <p className={styles.noTickets}>No tickets available yet, check back later.</p>
+            <p className="text-center text-gray-500 text-lg">No tickets available.</p>
           )}
+
         </div>
       </div>
     </div>
