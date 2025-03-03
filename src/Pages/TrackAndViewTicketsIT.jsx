@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-const TrackAndViewTickets = () => {
+const TrackAndViewTicketsIT = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,8 +15,8 @@ const TrackAndViewTickets = () => {
   const [ticketStats, setTicketStats] = useState({
     totalNumber: 0,
     activelNumber: 0,
-    notActiveNumber: 0,
-    completedNumber: 0
+    notActiveNumber: 0, // Initially set to 0
+    completedNumber: 0,
   });
 
   const [latestTickets, setLatestTickets] = useState([]);
@@ -59,8 +59,8 @@ const TrackAndViewTickets = () => {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -68,7 +68,31 @@ const TrackAndViewTickets = () => {
       }
 
       const data = await response.json();
-      setTicketStats(data);
+      setTicketStats((prevStats) => ({
+        ...prevStats,
+        totalNumber: data.totalNumber,
+        activelNumber: data.activelNumber,
+        completedNumber: data.completedNumber,
+      }));
+
+      // Now fetch the 'notActiveNumber' from a different endpoint
+      const notActiveResponse = await fetch(`http://localhost:5215/api/ticket/Ticket/count_all?filter=${filter}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!notActiveResponse.ok) {
+        throw new Error('Failed to fetch NOT_ACTIVE ticket count');
+      }
+
+      const notActiveData = await notActiveResponse.json();
+      setTicketStats((prevStats) => ({
+        ...prevStats,
+        notActiveNumber: notActiveData.notActiveNumber || 0, // Fallback to 0 if the data is missing
+      }));
     } catch (error) {
       toast.error(error.message || 'Failed to load ticket stats');
     }
@@ -81,36 +105,48 @@ const TrackAndViewTickets = () => {
         toast.error('User not authenticated');
         return;
       }
-
-      let url = `http://localhost:5215/api/ticket/Ticket/filter?filter=${filter}`;
-      if (selectedStatus) {
+  
+      let url = '';
+  
+      if (selectedStatus === 'NOT_ACTIVE') {
+        // Fetch for the 'NOT_ACTIVE' status using the specific endpoint
+        url = `http://localhost:5215/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=${filter}`;
+      } else {
+        // Default URL for all other statuses
+        url = `http://localhost:5215/api/ticket/Ticket/filter?filter=${filter}`;
+      }
+  
+      // Add status filter to the URL if it's not 'NOT_ACTIVE'
+      if (selectedStatus && selectedStatus !== 'NOT_ACTIVE') {
         url += `&status=${selectedStatus}`;
       }
+  
+      // Add the date filter if it's set
       if (filter === 'set' && selectedDate) {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         url += `&date=${formattedDate}`;
       }
-
+  
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to fetch latest tickets');
       }
-
+  
       const data = await response.json();
-      const sortedTickets = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setLatestTickets(sortedTickets); // ✅ Removed `.slice(0, 6)` to return all results
+      const sortedTickets = data.sort((a, b) => new Date(b.updateddAt) - new Date(a.updateddAt));
+      setLatestTickets(sortedTickets);
     } catch (error) {
       toast.error(error.message || 'Failed to load latest tickets');
     }
   };
-
+  
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -147,10 +183,9 @@ const TrackAndViewTickets = () => {
           )}
         </div>
 
-        
         {/* Status Boxes */}
         <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-          {[
+          {[ 
             { label: 'Total Tickets', value: ticketStats.totalNumber, status: '' },
             { label: 'Active Tickets', value: ticketStats.activelNumber, status: 'ACTIVE' },
             { label: 'Not Active Tickets', value: ticketStats.notActiveNumber, status: 'NOT_ACTIVE' },
@@ -183,7 +218,7 @@ const TrackAndViewTickets = () => {
               <div
                 key={ticket.id}
                 className="flex flex-col gap-2 bg-white shadow-md rounded-lg p-4 mb-4 transition duration-300 hover:ring-2 hover:ring-blue-400 hover:shadow-lg"
-                onClick={() => navigate(`/get_ticket_by_id/${ticket.ticketId}`)}
+                onClick={() => navigate(`/get_ticket_by_id_it/${ticket.ticketId}`)}
               >
                 <p className="font-bold">ID: {ticket.ticketId}</p>
                 <p>Description: {ticket.subject}</p>
@@ -206,4 +241,4 @@ const TrackAndViewTickets = () => {
   );
 };
 
-export default TrackAndViewTickets;
+export default TrackAndViewTicketsIT;

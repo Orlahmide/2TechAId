@@ -5,12 +5,14 @@ import Sidebar from '../Components/Sidebar';
 import Header from '../Components/Header';
 import toast, { Toaster } from 'react-hot-toast';
 
-const TicketDetails = () => {
+const TicketDetailsForIT = () => {
   const { ticketId } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [comment, setComment] = useState('');
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
     fetchTicketDetails();
@@ -19,14 +21,13 @@ const TicketDetails = () => {
   const fetchTicketDetails = async () => {
     try {
       const token = localStorage.getItem('accessToken');
-      const userRole = localStorage.getItem('userRole'); // Get role from local storage
+      const userRole = localStorage.getItem('userRole');
 
       if (!token) {
         toast.error('User not authenticated');
         return;
       }
 
-      // Determine the correct API URL based on role
       const baseURL =
         userRole === 'BANK_STAFF'
           ? `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
@@ -40,16 +41,63 @@ const TicketDetails = () => {
         }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch ticket details');
-      }
+      if (!response.ok) throw new Error('Failed to fetch ticket details');
 
       const data = await response.json();
       setTicket(data);
+      setStatus(data.status); 
+      if (data.status === 'COMPLETED') setComment(data.comment || 'No resolution comment provided.');
     } catch (error) {
       toast.error(error.message || 'Failed to load ticket details');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const assignTicket = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(
+        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}`, // Ticket ID as a query param
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+  
+      if (!response.ok) throw new Error('Failed to assign ticket');
+  
+      toast.success('Ticket assigned successfully');
+      fetchTicketDetails(); // Refresh data
+    } catch (error) {
+      toast.error(error.message || 'Error assigning ticket');
+    }
+  };
+  
+
+  const resolveTicket = async () => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(
+        `http://localhost:5215/api/ticket/Ticket/mark_as_completed?ticId=${ticketId}&comment=${comment}`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to resolve ticket');
+
+      toast.success('Ticket resolved successfully');
+      fetchTicketDetails(); // Refresh data
+    } catch (error) {
+      toast.error(error.message || 'Error resolving ticket');
     }
   };
 
@@ -60,18 +108,16 @@ const TicketDetails = () => {
       <div className="flex-1 p-6 overflow-y-auto">
         <Header user={user} />
 
-        {/* Content Section */}
         <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-300 mt-10 min-h-[500px]">
-          {/* Loading State */}
           {loading ? (
             <div className="flex justify-center items-center h-60 text-gray-600 text-lg font-medium">
               Loading ticket details...
             </div>
           ) : ticket ? (
             <>
-              {/* Ticket ID and Date Created */}
+              {/* Top Section */}
               <div className="flex flex-col md:flex-row justify-between mb-6">
-              <div className='flex gap-4'>
+                <div className='flex gap-4'>
                 <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-semibold">
                   ID: {ticket.ticketId}
                 </span>
@@ -79,19 +125,42 @@ const TicketDetails = () => {
                   Date created: {new Date(ticket.createdAt).toLocaleDateString()}
                 </span>
                 </div>
+                
+                {/* Assign Button */}
+                {status === 'NOT_ACTIVE' && (
+                  <button
+                    onClick={assignTicket}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600"
+                  >
+                    Assign Ticket
+                  </button>
+                )}
               </div>
 
-              {/* Subject and Description */}
+              {/* Ticket Info */}
               <div className="border p-5 rounded-lg bg-gray-50 shadow-sm">
                 <h2 className="text-xl font-bold text-gray-800">Subject: {ticket.subject}</h2>
                 <p className="mt-3 text-gray-700">{ticket.description}</p>
               </div>
 
               {/* Comment Section */}
-              <div className="border p-5 rounded-lg bg-gray-50 shadow-sm mt-5">
-                <h3 className="text-lg font-semibold text-gray-800">Comment:</h3>
-                <p className="text-gray-700">{ticket.comment || 'No comments yet.'}</p>
-              </div>
+              {status !== 'NOT_ACTIVE' && (
+                <div className="border p-5 rounded-lg bg-gray-50 shadow-sm mt-5">
+                  <h3 className="text-lg font-semibold text-gray-800">Comment:</h3>
+                  {status === 'COMPLETED' ? (
+                    <p className="mt-2 p-3 bg-gray-200 rounded-lg text-gray-700">
+                      {comment}
+                    </p>
+                  ) : (
+                    <textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      className="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Write a comment..."
+                    />
+                  )}
+                </div>
+              )}
 
               {/* Ticket Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mt-6">
@@ -110,29 +179,27 @@ const TicketDetails = () => {
                 <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
                   Contact: {ticket.phoneNumber}
                 </span>
+                <span
+                  className={`px-4 py-2 rounded-lg text-white font-medium w-fit 
+                    ${status === 'NOT_ACTIVE' ? 'bg-gray-500' : 
+                      status === 'ACTIVE' ? 'bg-yellow-500' : 
+                      'bg-green-500'}`}
+                >
+                  Status: {status.replace('_', ' ')}
+                </span>
               </div>
 
-              {/* Resolved Details */}
-              {ticket.status === 'ACTIVE' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-6">
-                  <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                    Date resolved: {ticket.dateResolved ? new Date(ticket.dateResolved).toLocaleDateString() : 'N/A'}
-                  </span>
-                  <span className="bg-yellow-200 px-4 py-2 rounded-lg text-yellow-800 font-medium w-fit">
-                    Assigned to: {ticket.iT_Personel_FirstName} {ticket.iT_Personel_LastName}
-                  </span>
-                </div>
-              )}
+              {/* Status Update Dropdown */}
+          
 
-              {ticket.status === 'COMPLETED' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-6">
-                  <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                    Date resolved: {ticket.dateResolved ? new Date(ticket.dateResolved).toLocaleDateString() : 'N/A'}
-                  </span>
-                  <span className="bg-green-200 px-4 py-2 rounded-lg text-green-800 font-medium w-fit">
-                    Resolved by: {ticket.iT_Personel_FirstName} {ticket.iT_Personel_LastName}
-                  </span>
-                </div>
+              {/* Resolve Button - Hidden when status is COMPLETED */}
+              {status === 'ACTIVE' && (
+                <button
+                  onClick={resolveTicket}
+                  className="mt-4 w-64 bg-blue-900 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
+                >
+                  Resolve Ticket
+                </button>
               )}
             </>
           ) : (
@@ -146,4 +213,4 @@ const TicketDetails = () => {
   );
 };
 
-export default TicketDetails;
+export default TicketDetailsForIT;

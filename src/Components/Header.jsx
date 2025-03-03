@@ -79,28 +79,28 @@ const Header = ({ user }) => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </form>
+
       <div className="flex items-center gap-12 relative">
         <div className="relative cursor-pointer text-[#007bff] text-lg" onClick={toggleNotifications}>
           <FaBell />
           {notifications.length > 0 && (
-            <span className="absolute top-0 right-0 bg-red-600 text-xs text-white rounded-full px-1.5">{notifications.length}</span>
+            <span className="absolute top-0 right-0 w-3 h-3 bg-red-600 rounded-full"></span>
           )}
         </div>
+
         {showNotifications && (
-          <div className="absolute top-12 right-5 bg-white border border-gray-300 rounded-md shadow-md w-72 max-h-96 overflow-y-auto z-50">
+          <div className="absolute top-12 right-5 bg-white border border-gray-300 rounded-md shadow-md w-80 max-h-96 overflow-y-auto z-50">
             {notifications.map((notification) => (
-              <div key={notification.id} className="p-3 border-b border-gray-200 last:border-none">
-                <p className="text-sm font-medium text-gray-800">{notification.message}</p>
-                <span className="text-xs text-gray-600">{notification.timestamp}</span>
+              <div key={notification.id} className="p-4 border-b border-gray-200 last:border-none">
+                <p className="text-md font-medium text-gray-800">{notification.message}</p>
+                <span className="text-sm text-gray-600">{notification.timestamp}</span>
               </div>
             ))}
           </div>
         )}
+
         <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 flex items-center justify-center rounded-full text-white font-bold bg-blue-900"
-            
-          >
+          <div className="w-12 h-12 flex items-center justify-center rounded-full text-white font-bold bg-blue-900">
             {getInitials(userData?.first_name, userData?.last_name)}
           </div>
           <span className="text-sm font-bold text-gray-800">{userData ? `${userData.first_name} ${userData.last_name}` : 'Guest User'}</span>

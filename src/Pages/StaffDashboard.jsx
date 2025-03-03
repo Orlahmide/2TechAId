@@ -104,30 +104,7 @@ const StaffDashboard = () => {
         {/* Filter Section */}
         {/* Filter Section */}
         <div className="flex items-center gap-4 p-2 rounded-lg border-gray-200 mt-4">
-          <label className="text-gray-700 font-medium">Filter by:</label>
-
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="w-fit px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-          >
-            <option value="none">None</option>
-            <option value="day">Day</option>
-            <option value="week">Week</option>
-            <option value="month">Month</option>
-            <option value="set">Set Date</option>
-          </select>
-
-          {filter === 'set' && (
-            <DatePicker
-              selected={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
-              dateFormat="yyyy-MM-dd"
-              className="w-[140px] px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              placeholderText="Select a date"
-            />
-          )}
-
+         
 
           {/* Create Ticket Button */}
           <button

@@ -9,6 +9,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current route
 
+  // Function to handle the "Dashboard" click based on user role
   const handleDashboardClick = () => {
     const userRole = localStorage.getItem('userRole');
     if (!userRole) {
@@ -32,6 +33,7 @@ const Sidebar = () => {
     }
   };
 
+  // Function to handle logout
   const handleLogout = async () => {
     try {
       const response = await fetch('http://localhost:5215/api/Employees/logout', {
@@ -51,10 +53,13 @@ const Sidebar = () => {
     }
   };
 
+  // Get the current user role from localStorage
+  const userRole = localStorage.getItem('userRole');
+
   return (
     <div className="w-[260px] h-screen bg-blue-900 text-white flex flex-col p-4 shadow-lg">
       <div className="flex ml-8 justify-left mb-6">
-        <img src={logo} alt="Optimus TechAid Logo" className="w-24 h-auto" />
+        <img src={logo} alt="Optimus TechAid Logo" className="w-24 h-auto mt-10" />
       </div>
       <br /><br />
 
@@ -79,10 +84,11 @@ const Sidebar = () => {
           <span>Profile</span>
         </Link>
 
+        {/* Track & View Tickets Link, dynamic based on user role */}
         <Link
-          to="/track-tickets"
+          to={userRole === 'IT_PERSONNEL' ? '/track-tickets-it' : '/track-tickets'}  // Adjusted path based on role
           className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-            location.pathname === '/track-tickets' ? 'bg-green-500' : 'hover:bg-green-700'
+            location.pathname.includes('track-tickets') ? 'bg-green-500' : 'hover:bg-green-700'
           }`}
         >
           <RiFocus2Line className="text-xl" />
