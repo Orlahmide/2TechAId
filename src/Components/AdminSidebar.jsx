@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaChartLine, FaPeopleArrows } from 'react-icons/fa';
 import { RxDashboard } from 'react-icons/rx';
 import { RiFocus2Line } from 'react-icons/ri';
 import logo from '../assets/logo.png';
 
-const Sidebar = () => {
+const AdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current route
 
   // Function to handle the "Dashboard" click based on user role
   const handleDashboardClick = () => {
-    const userRole = localStorage.getItem('userRole');
+    const userRole = localStorage.getItem('userRole') || 'GUEST'; // default to 'GUEST'
     if (!userRole) {
       alert('User role not found! Redirecting to home.');
       navigate('/');
@@ -35,12 +35,19 @@ const Sidebar = () => {
 
   // Function to handle logout
   const handleLogout = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      alert('No access token found. Redirecting to login.');
+      navigate('/logi');
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5215/api/Employees/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -58,11 +65,10 @@ const Sidebar = () => {
 
   return (
     <div className="w-[260px] h-screen bg-blue-900 text-white flex flex-col p-4 shadow-lg">
-      <div className="flex ml-8 justify-left mb-6">
+      <div className="flex ml-8 justify-left mb-6 mt-6">
         <img src={logo} alt="Optimus TechAid Logo" className="w-24 h-auto mt-10" />
       </div>
-      <br /><br />
-
+   
       <nav className="flex flex-col space-y-2 mb-4 gap-8">
         <button
           onClick={handleDashboardClick}
@@ -75,28 +81,46 @@ const Sidebar = () => {
         </button>
 
         <Link
-          to="/profile"
+          to="/adminprofile"
           className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-            location.pathname === '/profile' ? 'bg-green-500' : 'hover:bg-green-700'
+            location.pathname === '/adminprofile' ? 'bg-green-500' : 'hover:bg-green-700'
           }`}
         >
           <FaUser className="text-xl" />
           <span>Profile</span>
         </Link>
 
-        {/* Track & View Tickets Link, dynamic based on user role */}
         <Link
-          to={userRole === 'IT_PERSONNEL' ? '/track-tickets-it' : '/track-tickets'}  // Adjusted path based on role
-          className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
-            location.pathname.includes('track-tickets') ? 'bg-green-500' : 'hover:bg-green-700'
-          }`}
-        >
-          <RiFocus2Line className="text-xl" />
-          <span>Track & View Tickets</span>
-        </Link>
-      </nav>
+        to="/admintrackandview"
+        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+          location.pathname === '/admintracandview' ? 'bg-green-500' : 'hover:bg-green-700'
+        }`}
+      >
+        <RiFocus2Line className="text-xl" />
+        <span>Track & View Tickets</span>
+      </Link>
+        
+        <Link
+        to="/report"
+        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+          location.pathname === '/report' ? 'bg-green-500' : 'hover:bg-green-700'
+        }`}
+      >
+        <FaChartLine className="text-xl" />
+        <span>Reporting and Analytics</span>
+      </Link>
 
-      {/* Keep logout button lower, but not at the bottom */}
+      <Link
+        to="/accesslog"
+        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+          location.pathname === '/accesslog' ? 'bg-green-500' : 'hover:bg-green-700'
+        }`}
+      >
+        <FaPeopleArrows className="text-xl" />
+        <span>Access Log</span>
+      </Link>
+
+      </nav>
       <div className="mt-auto">
         <button
           onClick={handleLogout}
@@ -110,4 +134,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

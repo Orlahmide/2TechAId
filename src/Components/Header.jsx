@@ -81,7 +81,7 @@ const Header = ({ user }) => {
       </form>
 
       <div className="flex items-center gap-12 relative">
-        <div className="relative cursor-pointer text-[#007bff] text-lg" onClick={toggleNotifications}>
+        <div className="relative cursor-pointer text-[#007bff] text-2xl" onClick={toggleNotifications}>
           <FaBell />
           {notifications.length > 0 && (
             <span className="absolute top-0 right-0 w-3 h-3 bg-red-600 rounded-full"></span>
@@ -100,10 +100,10 @@ const Header = ({ user }) => {
         )}
 
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full text-white font-bold bg-blue-900">
+          <div className="w-8 h-8 flex items-center justify-center rounded-full text-white font-bold bg-blue-900 text-xs">
             {getInitials(userData?.first_name, userData?.last_name)}
           </div>
-          <span className="text-sm font-bold text-gray-800">{userData ? `${userData.first_name} ${userData.last_name}` : 'Guest User'}</span>
+          <span className="text-base font-bold text-gray-800">{userData ? `${userData.first_name} ${userData.last_name}` : 'Guest User'}</span>
         </div>
       </div>
     </div>

@@ -1,14 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+/* Add this line */
+/* In your index.css or App.css */
+/* In your index.css or App.css */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Sigmar&display=swap');
+
+
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Apply Poppins font correctly */
-body {
-  @apply font-sans text-[14px] leading-[20px] font-normal;
-  cursor: default; /* Ensure default cursor behavior */
+/* src/index.css or src/App.css */
+.quicksand-font {
+  font-family: 'Quicksand', sans-serif;
 }
+
+
+
 
 
 
@@ -31,3 +39,21 @@ input:-webkit-autofill::first-line {
   font-size: 1.125rem !important; /* Ensures autofill text matches */
   font-family: inherit !important;
 }
+@keyframes marquee {
+  0% {
+    transform: translateX(100%); /* Start completely off-screen (right) */
+  }
+  100% {
+    transform: translateX(-100%); /* Move fully off-screen (left) */
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  min-width: 100%;
+  animation: marquee 15s linear infinite; /* Smooth scroll */
+  will-change: transform;
+}
+
+

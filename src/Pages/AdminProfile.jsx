@@ -1,10 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import Sidebar from "../Components/Sidebar";
+
 import Header from "../Components/Header";
 import toast from "react-hot-toast";
+import AdminSidebar from "../Components/AdminSidebar";
 
-const ProfilePage = () => {
+const AdminProfile = () => {
   const { user } = useContext(AuthContext); // Assuming this gives the user info from the AuthContext
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -111,8 +112,8 @@ const ProfilePage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 p-6 px-16 overflow-y-auto">
+      <AdminSidebar />
+      <div className="flex-1 p-6 sm:px-8 lg:px-16 overflow-y-auto">
         <Header user={user} />
 
         {/* Profile Card */}
@@ -130,48 +131,48 @@ const ProfilePage = () => {
                 {originalUser ? `${originalUser.first_name} ${originalUser.last_name}` : "Loading..."}
               </h2>
               {/* Display the email next to the name */}
-              <p className="text-gray-600 text-xl">
+              <p className="text-gray-500 text-lg">
                 {originalUser ? originalUser.email : "Loading..."}
               </p>
             </div>
           </div>
 
           {/* Profile Form */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-1 md:grid-cols-2">
             <div>
-              <label className="text-gray-600 block mb-2 text-lg">First Name</label>
+              <label className="text-gray-600 text-lg font-medium block mb-2">First Name</label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
+                className={`w-full sm:w-96 px-4 py-3 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
                   isEditing ? "scale-105 ring-2 ring-white" : ""
                 }`}
               />
             </div>
             <div>
-              <label className="text-gray-600 block mb-2 text-lg">Last Name</label>
+              <label className="text-gray-600 text-lg font-medium block mb-2">Last Name</label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
+                className={`w-full sm:w-96 px-4 py-3 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
                   isEditing ? "scale-105 ring-2 ring-white" : ""
                 }`}
               />
             </div>
             <div>
-              <label className="text-gray-600 block mb-2 text-lg">Department</label>
+              <label className="text-gray-600 text-lg font-medium block mb-2">Department</label>
               <select
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
+                className={`w-full sm:w-96 px-4 py-3 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
                   isEditing ? "scale-105 ring-2 ring-white" : ""
                 }`}
               >
@@ -185,14 +186,14 @@ const ProfilePage = () => {
               </select>
             </div>
             <div>
-              <label className="text-gray-600 block mb-2 text-lg">Phone Number</label>
+              <label className="text-gray-600 text-lg font-medium block mb-2">Phone Number</label>
               <input
                 type="text"
                 name="contact"
                 value={formData.contact}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
+                className={`w-full sm:w-96 px-4 py-3 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
                   isEditing ? "scale-105 ring-2 ring-white" : ""
                 }`}
               />
@@ -200,7 +201,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Edit Button */}
-          <div className="mt-56 flex justify-end">
+          <div className="mt-6 flex justify-end">
             <button
               onClick={isEditing ? handleSave : handleEdit}
               className="px-10 py-3 bg-blue-900 text-white rounded-xl shadow-md hover:bg-blue-600 transition"
@@ -214,4 +215,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default AdminProfile;

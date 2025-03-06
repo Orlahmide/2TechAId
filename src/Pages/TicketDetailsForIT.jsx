@@ -45,7 +45,7 @@ const TicketDetailsForIT = () => {
 
       const data = await response.json();
       setTicket(data);
-      setStatus(data.status); 
+      setStatus(data.status);
       if (data.status === 'COMPLETED') setComment(data.comment || 'No resolution comment provided.');
     } catch (error) {
       toast.error(error.message || 'Failed to load ticket details');
@@ -67,16 +67,16 @@ const TicketDetailsForIT = () => {
           }
         }
       );
-  
+
       if (!response.ok) throw new Error('Failed to assign ticket');
-  
+
       toast.success('Ticket assigned successfully');
       fetchTicketDetails(); // Refresh data
     } catch (error) {
       toast.error(error.message || 'Error assigning ticket');
     }
   };
-  
+
 
   const resolveTicket = async () => {
     try {
@@ -102,13 +102,13 @@ const TicketDetailsForIT = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 text-lg">
       <Toaster />
       <Sidebar />
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 px-16 overflow-y-auto">
         <Header user={user} />
 
-        <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-300 mt-10 min-h-[500px]">
+        <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-300 mt-10 min-h-[100px]">
           {loading ? (
             <div className="flex justify-center items-center h-60 text-gray-600 text-lg font-medium">
               Loading ticket details...
@@ -118,14 +118,14 @@ const TicketDetailsForIT = () => {
               {/* Top Section */}
               <div className="flex flex-col md:flex-row justify-between mb-6">
                 <div className='flex gap-4'>
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-semibold">
-                  ID: {ticket.ticketId}
-                </span>
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-semibold">
-                  Date created: {new Date(ticket.createdAt).toLocaleDateString()}
-                </span>
+                  <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-semibold">
+                    ID: {ticket.ticketId}
+                  </span>
+                  <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-semibold">
+                    Date created: {new Date(ticket.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
-                
+
                 {/* Assign Button */}
                 {status === 'NOT_ACTIVE' && (
                   <button
@@ -140,22 +140,22 @@ const TicketDetailsForIT = () => {
               {/* Ticket Info */}
               <div className="border p-5 rounded-lg bg-gray-50 shadow-sm">
                 <h2 className="text-xl font-bold text-gray-800">Subject: {ticket.subject}</h2>
-                <p className="mt-3 text-gray-700">{ticket.description}</p>
+                <p className="mt-3 text-gray-700 h-20">{ticket.description}</p>
               </div>
 
               {/* Comment Section */}
               {status !== 'NOT_ACTIVE' && (
-                <div className="border p-5 rounded-lg bg-gray-50 shadow-sm mt-5">
+                <div className="border p-5 rounded-lg bg-gray-50 shadow-sm mt-5 ">
                   <h3 className="text-lg font-semibold text-gray-800">Comment:</h3>
                   {status === 'COMPLETED' ? (
-                    <p className="mt-2 p-3 bg-gray-200 rounded-lg text-gray-700">
+                    <p className="mt-2 p-3 bg-gray-50 rounded-lg text-gray-700 h-20">
                       {comment}
                     </p>
                   ) : (
                     <textarea
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      className="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full mt-2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-36"
                       placeholder="Write a comment..."
                     />
                   )}
@@ -163,40 +163,41 @@ const TicketDetailsForIT = () => {
               )}
 
               {/* Ticket Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mt-6">
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                  Name: {ticket.firstName} {ticket.lastName}
-                </span>
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                  Department: {ticket.department}
-                </span>
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                  Priority: {ticket.priority}
-                </span>
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                  Type: {ticket.category}
-                </span>
-                <span className="bg-gray-200 px-4 py-2 rounded-lg text-gray-800 font-medium w-fit">
-                  Contact: {ticket.phoneNumber}
-                </span>
-                <span
-                  className={`px-4 py-2 rounded-lg text-white font-medium w-fit 
-                    ${status === 'NOT_ACTIVE' ? 'bg-gray-500' : 
-                      status === 'ACTIVE' ? 'bg-yellow-500' : 
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mt-8">
+                <div className="bg-blue-50 p-4 rounded-lg shadow-md">
+                  <span className="text-gray-800 font-medium">Name: {ticket.firstName} {ticket.lastName}</span>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg shadow-md">
+                  <span className="text-gray-800 font-medium">Department: {ticket.department}</span>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg shadow-md">
+                  <span className="text-gray-800 font-medium">Priority: {ticket.priority}</span>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg shadow-md">
+                  <span className="text-gray-800 font-medium">Type: {ticket.category}</span>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg shadow-md">
+                  <span className="text-gray-800 font-medium">Contact: {ticket.phoneNumber}</span>
+                </div>
+                {/* Status Box Fix */}
+                <div className={`p-4 rounded-lg shadow-md text-white font-medium
+    ${status === 'NOT_ACTIVE' ? 'bg-gray-500' :
+                    status === 'ACTIVE' ? 'bg-yellow-500' :
                       'bg-green-500'}`}
                 >
                   Status: {status.replace('_', ' ')}
-                </span>
+                </div>
               </div>
 
+
               {/* Status Update Dropdown */}
-          
+
 
               {/* Resolve Button - Hidden when status is COMPLETED */}
               {status === 'ACTIVE' && (
                 <button
                   onClick={resolveTicket}
-                  className="mt-4 w-64 bg-blue-900 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
+                  className="mt-10 w-44 bg-blue-900 text-white px-2 py-2 rounded-lg shadow hover:bg-blue-600"
                 >
                   Resolve Ticket
                 </button>

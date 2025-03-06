@@ -211,28 +211,42 @@ const TrackAndViewTicketsIT = () => {
           ))}
         </div>
 
-        {/* Ticket List */}
-        <div className="mt-10 h-3/5 overflow-y-auto border-t border-gray-300 rounded-lg p-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+        <div className="  mt-10 h-3/5 overflow-y-auto border-t border-gray-200 rounded-lg p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
           {latestTickets.length > 0 ? (
             latestTickets.map((ticket) => (
               <div
                 key={ticket.id}
-                className="flex flex-col gap-2 bg-white shadow-md rounded-lg p-4 mb-4 transition duration-300 hover:ring-2 hover:ring-blue-400 hover:shadow-lg"
+                className="flex flex-col gap-3 bg-white rounded-xl shadow-md p-4 mb-4 transition duration-300 transform hover:scale-102 hover:shadow-lg hover:ring-2 hover:ring-blue-300 cursor-pointer"
                 onClick={() => navigate(`/get_ticket_by_id_it/${ticket.ticketId}`)}
+                
               >
-                <p className="font-bold">ID: {ticket.ticketId}</p>
-                <p>Description: {ticket.subject}</p>
-                <div className="flex gap-2">
-                  <span className="bg-gray-200 px-2 py-1 rounded-lg font-medium">Status: {ticket.status}</span>
-                  <span className="bg-gray-200 px-2 py-1 rounded-lg font-medium">Type: {ticket.category}</span>
-                  <span className="bg-gray-200 px-2 py-1 rounded-lg font-medium">
-                    Date: {new Date(ticket.createdAt).toLocaleDateString()}
+                <div className="flex justify-between items-center ">
+                  <p className="text-lg font-semibold text-gray-900">{`ID: ${ticket.ticketId}`}</p>
+                  <span className={`w-24 text-center px-2 py-1 text-sm font-medium rounded-full ${ticket.status === 'ACTIVE' ? 'bg-yellow-200 text-blue-800' : ticket.status === 'COMPLETED' ? 'bg-green-200 text-green-800' : 'bg-red-400 text-gray-800'}`}>
+                    {ticket.status}
                   </span>
                 </div>
+
+                <div className="mt-3 flex justify-between text-base text-gray-600">
+                  <div className=" flex justify-start text-base text-start  text-gray-600 gap-60 w-2/4">
+                    <div className="flex items-center gap-2 w-1/5 overflow-hidden">
+                      <span>{ticket.subject}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>{ticket.category}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span>{new Date(ticket.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+
+
               </div>
             ))
           ) : (
-            <p className="text-center text-gray-500 text-lg">No tickets available.</p>
+            <p className="text-center text-gray-500 text-3xl mt-40">No tickets available.</p>
           )}
         </div>
 

@@ -1,9 +1,10 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"], // Ensure Tailwind scans all files
+  content: ["./src/**/*.{js,jsx,ts,tsx}"], // Specify where Tailwind should look for class names
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Roboto", "Helvetica Neue", "sans-serif"], // Set as default sans-serif
+        quicksand: ['Quicksand', 'sans-serif'], 
+
       },
     },
   },
