@@ -77,7 +77,7 @@ export default function CreateTicket() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 text-base">
       <Sidebar />
       <div className="flex-1 p-6 px-16 overflow-y-auto">
         <Header />
@@ -191,34 +191,33 @@ export default function CreateTicket() {
           </div>
 
           <div className="flex justify-end mt-6">
-            <Dialog.Root>
-              <Dialog.Trigger asChild>
-                <button
-                  className="bg-blue-700 text-white px-6 py-2 rounded-md text-lg font-medium shadow-md hover:bg-blue-800"
-                  onClick={handleSubmit}
-                >
-                  Submit Ticket
-                </button>
-              </Dialog.Trigger>
-              {ticketId && (
-                <Dialog.Portal>
-                  <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
-                  <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-                    <Dialog.Title className="text-lg font-bold">Ticket Created</Dialog.Title>
-                    <p className="mt-2">Your ticket (ID: {ticketId}) has been successfully created!</p>
-                    <Dialog.Close
-                      className="mt-4 bg-blue-900 text-white px-4 py-2 rounded"
-                      onClick={() => navigate("/staffDashboard")}
-                    >
-                      Close
-                    </Dialog.Close>
-                  </Dialog.Content>
-                </Dialog.Portal>
-              )}
+  <Dialog.Root>
+    <Dialog.Trigger asChild>
+      <button
+        className="bg-blue-700 text-white px-6 py-2 rounded-md text-lg font-medium shadow-md hover:bg-blue-800"
+        onClick={handleSubmit}
+      >
+        Submit Ticket
+      </button>
+    </Dialog.Trigger>
+    {ticketId && (
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full">
+          <Dialog.Title className="text-xl font-bold">Ticket Created</Dialog.Title>
+          <p className="mt-4 text-lg">Your ticket ID: {ticketId} has been successfully created!</p>
+          <Dialog.Close
+            className="mt-6 bg-blue-900 text-white px-6 py-3 rounded text-lg font-medium"
+            onClick={() => navigate("/staffDashboard")}
+          >
+            Close
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    )}
+  </Dialog.Root>
+</div>
 
-
-            </Dialog.Root>
-          </div>
         </div>
       </div>
     </div>

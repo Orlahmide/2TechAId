@@ -114,8 +114,11 @@ const TicketDetails = () => {
                 <div className="bg-blue-50 p-4 rounded-lg shadow-md">
                   <span className="text-gray-800 font-medium">Type: {ticket.category}</span>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-lg shadow-md">
-                  <span className="text-gray-800 font-medium">Contact: {ticket.phoneNumber}</span>
+                <div className="bg-blue-50 p-4 rounded-lg shadow-md overflow-hidden">
+                  <span className="text-gray-800 font-medium">Phone Number: {ticket.phoneNumber}</span>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg shadow-m overflow-hidden">
+                  <span className="text-gray-800 font-medium">Email: {ticket.email}</span>
                 </div>
               </div>
 
@@ -129,9 +132,16 @@ const TicketDetails = () => {
                   </div>
                   <div className="bg-yellow-100 p-4 rounded-lg shadow-md">
                     <span className="text-gray-800 font-medium">
-                      Date Assigned: {ticket.updateddAt ? new Date(ticket.updateddAt).toLocaleDateString() : 'N/A'}
+                      Email: {ticket.iT_Personel_Email}
                     </span>
                   </div>
+                  <div className="bg-yellow-100 p-4 rounded-lg shadow-md">
+                    <span className="text-gray-800 font-medium">
+                      Date Assigned: {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleDateString() : 'N/A'}
+                    </span>
+                  </div>
+
+                
                
                 </div>
               )}
@@ -145,7 +155,12 @@ const TicketDetails = () => {
                   </div>
                   <div className="bg-green-100 p-4 rounded-lg shadow-md">
                     <span className="text-gray-800 font-medium">
-                      Date Resolved: {ticket.updateddAt ? new Date(ticket.updateddAt).toLocaleDateString() : 'N/A'}
+                      Email: {ticket.iT_Personel_Email}
+                    </span>
+                  </div>
+                  <div className="bg-green-100 p-4 rounded-lg shadow-md">
+                    <span className="text-gray-800 font-medium">
+                      Date Resolved: {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleDateString() : 'N/A'}
                     </span>
                   </div>
                  

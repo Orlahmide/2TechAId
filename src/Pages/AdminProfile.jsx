@@ -111,7 +111,7 @@ const AdminProfile = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 text-base">
       <AdminSidebar />
       <div className="flex-1 p-6 sm:px-8 lg:px-16 overflow-y-auto">
         <Header user={user} />

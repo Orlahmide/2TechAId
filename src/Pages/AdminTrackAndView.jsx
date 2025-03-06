@@ -113,7 +113,7 @@ const AdminTrackAndView = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 text-base">
       <Toaster />
       <AdminSidebar />
       <div className="flex-1 p-6 px-16 overflow-y-auto scrollbar-thin scrollbar-thumb-hidden scrollbar-track-hidden">

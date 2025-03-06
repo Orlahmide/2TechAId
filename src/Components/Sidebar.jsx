@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaUser, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaSignOutAlt, FaBook } from 'react-icons/fa';
 import { RxDashboard } from 'react-icons/rx';
 import { RiFocus2Line } from 'react-icons/ri';
 import logo from '../assets/logo.png';
@@ -93,6 +93,16 @@ const Sidebar = () => {
         >
           <RiFocus2Line className="text-xl" />
           <span>Track & View Tickets</span>
+        </Link>
+
+        <Link
+          to= "/knowledge"  // Adjusted path based on role
+          className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
+            location.pathname.includes('knowledge') ? 'bg-green-500' : 'hover:bg-green-700'
+          }`}
+        >
+          <FaBook className="text-xl" />
+          <span>Knowledge Base</span>
         </Link>
       </nav>
 

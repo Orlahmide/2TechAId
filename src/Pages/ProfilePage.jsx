@@ -5,7 +5,7 @@ import Header from "../Components/Header";
 import toast from "react-hot-toast";
 
 const ProfilePage = () => {
-  const { user } = useContext(AuthContext); // Assuming this gives the user info from the AuthContext
+  const { user } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -14,9 +14,8 @@ const ProfilePage = () => {
     contact: "",
   });
 
-  const [originalUser, setOriginalUser] = useState(null); // Store the original user info
+  const [originalUser, setOriginalUser] = useState(null);
 
-  // Fetch the user information when the component mounts
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -29,7 +28,7 @@ const ProfilePage = () => {
         const response = await fetch("http://localhost:5215/api/Employees/get_employee_id", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -39,9 +38,8 @@ const ProfilePage = () => {
         }
 
         const data = await response.json();
-        setOriginalUser(data); // Store the original user info
+        setOriginalUser(data);
 
-        // Populate the form with the fetched data
         setFormData({
           firstName: data.first_name || "",
           lastName: data.last_name || "",
@@ -54,7 +52,7 @@ const ProfilePage = () => {
     };
 
     fetchUserData();
-  }, []); // Only run once when the component mounts
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -75,19 +73,18 @@ const ProfilePage = () => {
       const { firstName, lastName, contact, department } = formData;
 
       const body = {
-        password: "", // Assuming password is not being updated (you can add a password field if necessary)
+        password: "",
         phone_number: contact,
         first_name: firstName,
         last_name: lastName,
       };
 
-      // Send update request
       const response = await fetch(
         `http://localhost:5215/api/Employees/update?department=${department}`,
         {
           method: "PATCH",
           headers: {
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
@@ -100,9 +97,7 @@ const ProfilePage = () => {
 
       const updatedData = await response.json();
       toast.success("User information updated successfully!");
-
-      // Optionally, refresh the data or re-enable editing
-      setOriginalUser(updatedData); // Update original user data with the response
+      setOriginalUser(updatedData);
       setIsEditing(false);
     } catch (error) {
       toast.error(error.message || "Failed to update user data");
@@ -110,34 +105,29 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 text-base">
       <Sidebar />
       <div className="flex-1 p-6 px-16 overflow-y-auto">
         <Header user={user} />
 
-        {/* Profile Card */}
         <div className="max-w-full mx-auto h-4/6 rounded-lg p-8 mt-12 bg-white shadow-md">
-          {/* Avatar, Name, and Email */}
-          <div className="flex items-center gap-6 mb-6">
-            <div className="w-16 h-16 bg-blue-700 text-white text-xl font-semibold rounded-full flex items-center justify-center">
-              {/* Display the initials (First letter of firstName + lastName) */}
+          <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
+            <div className="w-20 h-20 bg-blue-700 text-white text-2xl font-semibold rounded-full flex items-center justify-center">
               {originalUser
                 ? `${originalUser.first_name.charAt(0)}${originalUser.last_name.charAt(0)}`
                 : "N/A"}
             </div>
-            <div>
+            <div className="text-center md:text-left">
               <h2 className="text-3xl font-semibold text-gray-800">
                 {originalUser ? `${originalUser.first_name} ${originalUser.last_name}` : "Loading..."}
               </h2>
-              {/* Display the email next to the name */}
-              <p className="text-gray-600 text-xl">
+              <p className="text-gray-600 text-lg">
                 {originalUser ? originalUser.email : "Loading..."}
               </p>
             </div>
           </div>
 
-          {/* Profile Form */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <label className="text-gray-600 block mb-2 text-lg">First Name</label>
               <input
@@ -146,8 +136,8 @@ const ProfilePage = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
-                  isEditing ? "scale-105 ring-2 ring-white" : ""
+                className={`w-full px-6 py-3 border border-gray-400 rounded-md bg-gray-100 text-gray-700 ${
+                  isEditing ? "ring-2 ring-blue-500" : ""
                 }`}
               />
             </div>
@@ -159,8 +149,8 @@ const ProfilePage = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
-                  isEditing ? "scale-105 ring-2 ring-white" : ""
+                className={`w-full px-6 py-3 border border-gray-400 rounded-md bg-gray-100 text-gray-700 ${
+                  isEditing ? "ring-2 ring-blue-500" : ""
                 }`}
               />
             </div>
@@ -171,8 +161,8 @@ const ProfilePage = () => {
                 value={formData.department}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
-                  isEditing ? "scale-105 ring-2 ring-white" : ""
+                className={`w-full px-6 py-3 border border-gray-400 rounded-md bg-gray-100 text-gray-700 ${
+                  isEditing ? "ring-2 ring-blue-500" : ""
                 }`}
               >
                 <option value="">Select Department</option>
@@ -192,18 +182,17 @@ const ProfilePage = () => {
                 value={formData.contact}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className={`w-full sm:w-96 px-4 py-2 border-2 border-gray-400 rounded-md bg-gray-100 text-gray-700 transition-transform transform ${
-                  isEditing ? "scale-105 ring-2 ring-white" : ""
+                className={`w-full px-6 py-3 border border-gray-400 rounded-md bg-gray-100 text-gray-700 ${
+                  isEditing ? "ring-2 ring-blue-500" : ""
                 }`}
               />
             </div>
           </div>
 
-          {/* Edit Button */}
-          <div className="mt-56 flex justify-end">
+          <div className="mt-12 flex justify-center md:justify-end">
             <button
               onClick={isEditing ? handleSave : handleEdit}
-              className="px-10 py-3 bg-blue-900 text-white rounded-xl shadow-md hover:bg-blue-600 transition"
+              className="px-12 py-4 text-lg bg-blue-900 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
             >
               {isEditing ? "Save" : "Edit"}
             </button>

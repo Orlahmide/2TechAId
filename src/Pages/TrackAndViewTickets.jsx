@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Sidebar from '../Components/Sidebar';
+
 import { AuthContext } from '../Context/AuthContext';
 import Header from '../Components/Header';
 import toast, { Toaster } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import Sidebar from '../Components/Sidebar';
 
 const TrackAndViewTickets = () => {
   const { user } = useContext(AuthContext);
@@ -113,9 +114,9 @@ const TrackAndViewTickets = () => {
 
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 text-base">
       <Toaster />
-      <Sidebar />
+      <Sidebar/>
       <div className="flex-1 p-6 px-16 overflow-y-auto scrollbar-thin scrollbar-thumb-hidden  scrollbar-track-hidden">
 
         <Header user={user} />
