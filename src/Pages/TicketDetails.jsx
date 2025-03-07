@@ -21,18 +21,18 @@ const TicketDetails = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const userRole = localStorage.getItem('userRole'); // Get role from local storage
-
+  
       if (!token) {
         toast.error('User not authenticated');
         return;
       }
-
+  
       // Determine the correct API URL based on role
       const baseURL =
         userRole === 'BANK_STAFF'
           ? `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
           : `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
-
+  
       const response = await fetch(baseURL, {
         method: 'GET',
         headers: {
@@ -40,11 +40,17 @@ const TicketDetails = () => {
           'Content-Type': 'application/json'
         }
       });
-
+  
+      if (response.status === 204) {
+        setTicket(null);
+        toast('No ticket found');
+        return;
+      }
+  
       if (!response.ok) {
         throw new Error('Failed to fetch ticket details');
       }
-
+  
       const data = await response.json();
       setTicket(data);
     } catch (error) {
@@ -53,6 +59,7 @@ const TicketDetails = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex h-screen bg-gray-100 text-lg">

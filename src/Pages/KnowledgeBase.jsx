@@ -108,13 +108,13 @@ const KnowledgeBase = () => {
                             <div key={index} className="border-b last:border-none">
                                 <button
                                     onClick={() => toggleAnswer(index)}
-                                    className="w-full text-left flex justify-between items-center p-4 text-lg font-semibold text-gray-800 hover:bg-gray-100 rounded-lg transition duration-300"
+                                    className="w-full text-left flex justify-between items-center p-4 text-lg font-semibold text-gray-700 hover:bg-gray-100 rounded-lg transition duration-300"
                                 >
                                     {item.question}
-                                    {openIndex === index ? <FaMinus className="text-gray-800" /> : <FaPlus className="text-gray-800" />}
+                                    {openIndex === index ? <FaMinus className="text-gray-400" /> : <FaPlus className="text-gray-800" />}
                                 </button>
                                 {openIndex === index && (
-                                    <div className="p-4 text-gray-700 bg-gray-100 rounded-b-lg">
+                                    <div className="p-4 text-gray-750 bg-gray-100 rounded-b-lg text-lg">
                                         {item.answer}
                                     </div>
                                 )}

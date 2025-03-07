@@ -22,6 +22,7 @@ import AdminProfile from "./Pages/AdminProfile";
 import AdminTrackAndView from "./Pages/AdminTrackAndView";
 import AccessLog from "./Pages/AccessLog";
 import KnowledgeBase from "./Pages/KnowledgeBase";
+import Analytics from "./Pages/Analytics.";
 
 
 
@@ -55,7 +56,7 @@ function App() {
             <Route path="/adminprofile" element={<AdminProfile />} />
             <Route path="/accesslog" element={<AccessLog />} />
             <Route path="/knowledge" element={<KnowledgeBase/>} />
-            <Route path="/report" element={<Report/>} />
+            <Route path="/report" element={<Analytics/>} />
 
           </Route>
         </Routes>

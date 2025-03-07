@@ -4,6 +4,7 @@ import { AuthContext } from '../Context/AuthContext';
 import Sidebar from '../Components/Sidebar';
 import Header from '../Components/Header';
 import toast, { Toaster } from 'react-hot-toast';
+import * as Dialog from "@radix-ui/react-dialog";
 
 const TicketDetailsForIT = () => {
   const { ticketId } = useParams();
@@ -78,6 +79,8 @@ const TicketDetailsForIT = () => {
   };
 
 
+  const [isResolved, setIsResolved] = useState(false);
+
   const resolveTicket = async () => {
     try {
       const token = localStorage.getItem('accessToken');
@@ -95,11 +98,13 @@ const TicketDetailsForIT = () => {
       if (!response.ok) throw new Error('Failed to resolve ticket');
 
       toast.success('Ticket resolved successfully');
+      setIsResolved(true); // Trigger modal
       fetchTicketDetails(); // Refresh data
     } catch (error) {
       toast.error(error.message || 'Error resolving ticket');
     }
   };
+
 
   return (
     <div className="flex h-screen bg-gray-100 text-base">
@@ -188,11 +193,7 @@ const TicketDetailsForIT = () => {
                   Status: {status.replace('_', ' ')}
                 </div>
               </div>
-
-
               {/* Status Update Dropdown */}
-
-
               {/* Resolve Button - Hidden when status is COMPLETED */}
               {status === 'ACTIVE' && (
                 <button
@@ -210,6 +211,24 @@ const TicketDetailsForIT = () => {
           )}
         </div>
       </div>
+      {isResolved && (
+        <Dialog.Root open={isResolved} onOpenChange={setIsResolved}>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
+            <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg max-w-2xl w-full">
+              <Dialog.Title className="text-xl font-bold">Ticket Resolved</Dialog.Title>
+              <p className="mt-4 text-lg">Ticket with ID: {ticketId} has been resolved successfully!</p>
+              <Dialog.Close
+                className="mt-6 bg-blue-900 text-white px-6 py-3 rounded text-lg font-medium"
+                onClick={() => navigate("/staffDashboard")}
+              >
+                Close
+              </Dialog.Close>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )}
+
     </div>
   );
 };
