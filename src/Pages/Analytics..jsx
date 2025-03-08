@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
     PieChart,
     Pie,
@@ -18,6 +18,10 @@ import { AiOutlineDownload } from "react-icons/ai";
 import Header from "../Components/Header";
 import { AuthContext } from "../Context/AuthContext";
 import AdminSidebar from "../Components/AdminSidebar";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import AdminDashboard from "./AdminDashboard";
+import AdminHeader from "../Components/AdminHeader";
 
 const API_URL = "http://localhost:5215/api/ticket/Ticket/analytics";
 
@@ -106,13 +110,14 @@ const Analytics = () => {
         { label: "Department", state: department, setState: setDepartment, options: ["", "SALES", "OPERATION", "TREASURY", "HR", "CUSTOMER_SERVICE"] },
     ];
 
+    const contentRef = useRef(null);
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white p-2 rounded-lg shadow-none border border-transparent text-sm hover:bg-green-400">
-                    <p className="font-semibold">{label}</p>
+                <div className="bg-white p-3 rounded-lg shadow-md border border-gray-300 text-sm">
+                    <p className="font-semibold text-blue-900">{label}</p>
                     {payload.map((entry, index) => (
-                        <p key={index}>
+                        <p key={index} className="text-gray-700">
                             {entry.name}: <span className="font-bold">{entry.value}</span>
                         </p>
                     ))}
@@ -122,17 +127,40 @@ const Analytics = () => {
         return null;
     };
     
+    const downloadPDF = () => {
+        if (!contentRef.current) {
+            console.error("Reference to element is null");
+            return;
+        }
     
-
+        setTimeout(() => { // Add delay to ensure everything is fully rendered
+            html2canvas(contentRef.current, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: "#fff",
+                logging: true, // Helps debug issues
+            }).then((canvas) => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jsPDF("p", "mm", "a4");
+                const imgWidth = 210;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+                pdf.save("analytics_report.pdf");
+            });
+        }, 500); // Delay of 500ms to ensure the DOM is fully rendered
+    };
+    
+    
+    
 
     return (
         <div className="flex h-screen bg-gray-100 text-base">
             <AdminSidebar />
-            <div className="flex-1 p-6 px-16 overflow-y-auto min-h-screen relative">
-                <Header user={user} />
+            <div className="flex-1 p-6 px-16 overflow-y-auto min-h-screen relative" ref={contentRef}>
+                <AdminHeader user={user} />
 
                 {/* Dropdown Filters */}
-                <div className="flex items-center justify-between px-8 mt-4">
+                <div className="flex items-center justify-between px-8 mt-4 ">
                     <div className="flex gap-6">
                         {dropdownOptions.map((dropdown, index) => (
                             <div key={index} className="bg-white px-5 py-2 rounded-lg shadow-md w-44 ">
@@ -155,9 +183,13 @@ const Analytics = () => {
                         ))}
                     </div>
 
-                    <div className="text-4xl text-gray-700 cursor-pointer">
+                       {/* Dropdown Filters */}
+                <div className="flex items-center justify-between px-8 mt-4" >
+                    <div className="flex gap-6">{/* Filter dropdowns remain unchanged */}</div>
+                    <div className="text-4xl text-gray-700 cursor-pointer" onClick={downloadPDF}>
                         <AiOutlineDownload />
                     </div>
+                </div>
                 </div>
 
                 {/* Charts Section */}
@@ -195,7 +227,7 @@ const Analytics = () => {
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="day" />
                                             <YAxis />
-                                            <Tooltip />
+                                            <Tooltip  content={<CustomTooltip />} />
                                             <Bar dataKey="tickets" fill="#0B1D69" barSize={40} shape={<Rectangle radius={[20, 20, 0, 0]} />} />
                                         </BarChart>
                                     </ResponsiveContainer>

@@ -4,6 +4,7 @@ import { AuthContext } from "../Context/AuthContext";
 import Header from "../Components/Header";
 import toast from "react-hot-toast";
 import AdminSidebar from "../Components/AdminSidebar";
+import AdminHeader from "../Components/AdminHeader";
 
 const AdminProfile = () => {
   const { user } = useContext(AuthContext); // Assuming this gives the user info from the AuthContext
@@ -114,7 +115,7 @@ const AdminProfile = () => {
     <div className="flex h-screen bg-gray-100 text-base">
       <AdminSidebar />
       <div className="flex-1 p-6 sm:px-8 lg:px-16 overflow-y-auto">
-        <Header user={user} />
+        <AdminHeader user={user} />
 
         {/* Profile Card */}
         <div className="max-w-full mx-auto h-4/6 rounded-lg p-8 mt-12 bg-white shadow-md">

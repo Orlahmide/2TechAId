@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Sidebar from '../Components/Sidebar';
 import { AuthContext } from '../Context/AuthContext';
 import Header from '../Components/Header';
 import toast, { Toaster } from 'react-hot-toast';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import AdminSidebar from '../Components/AdminSidebar';
-import AdminHeader from '../Components/AdminHeader';
 
-const AdminTrackAndView = () => {
+const TrackAndViewTicketsAdmin = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,8 +15,8 @@ const AdminTrackAndView = () => {
   const [ticketStats, setTicketStats] = useState({
     totalNumber: 0,
     activelNumber: 0,
-    notActiveNumber: 0,
-    completedNumber: 0
+    notActiveNumber: 0, // Initially set to 0
+    completedNumber: 0,
   });
 
   const [latestTickets, setLatestTickets] = useState([]);
@@ -50,7 +49,7 @@ const AdminTrackAndView = () => {
         return;
       }
 
-      let url = `http://localhost:5215/api/ticket/Ticket/count_all?filter=${filter}`;
+      let url = `http://localhost:5215/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         url += `&date=${formattedDate}`;
@@ -60,8 +59,8 @@ const AdminTrackAndView = () => {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (!response.ok) {
@@ -69,7 +68,31 @@ const AdminTrackAndView = () => {
       }
 
       const data = await response.json();
-      setTicketStats(data);
+      setTicketStats((prevStats) => ({
+        ...prevStats,
+        totalNumber: data.totalNumber,
+        activelNumber: data.activelNumber,
+        completedNumber: data.completedNumber,
+      }));
+
+      // Now fetch the 'notActiveNumber' from a different endpoint
+      const notActiveResponse = await fetch(`http://localhost:5215/api/ticket/Ticket/count_all?filter=${filter}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!notActiveResponse.ok) {
+        throw new Error('Failed to fetch NOT_ACTIVE ticket count');
+      }
+
+      const notActiveData = await notActiveResponse.json();
+      setTicketStats((prevStats) => ({
+        ...prevStats,
+        notActiveNumber: notActiveData.notActiveNumber || 0, // Fallback to 0 if the data is missing
+      }));
     } catch (error) {
       toast.error(error.message || 'Failed to load ticket stats');
     }
@@ -82,53 +105,65 @@ const AdminTrackAndView = () => {
         toast.error('User not authenticated');
         return;
       }
-
-      let url = `http://localhost:5215/api/ticket/Ticket/filter_for_admin?filter=${filter}`;
-
-      if (selectedStatus) {
+  
+      let url = '';
+  
+      if (selectedStatus === 'NOT_ACTIVE') {
+        // Fetch for the 'NOT_ACTIVE' status using the specific endpoint
+        url = `http://localhost:5215/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=${filter}`;
+      } else {
+        // Default URL for all other statuses
+        url = `http://localhost:5215/api/ticket/Ticket/filter?filter=${filter}`;
+      }
+  
+      // Add status filter to the URL if it's not 'NOT_ACTIVE'
+      if (selectedStatus && selectedStatus !== 'NOT_ACTIVE') {
         url += `&status=${selectedStatus}`;
       }
+  
+      // Add the date filter if it's set
       if (filter === 'set' && selectedDate) {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         url += `&date=${formattedDate}`;
       }
-
+  
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to fetch latest tickets');
       }
-
+  
       const data = await response.json();
-      const sortedTickets = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setLatestTickets(sortedTickets); // ✅ Removed `.slice(0, 6)` to return all results
+      const sortedTickets = data.sort((a, b) => new Date(b.updateddAt) - new Date(a.updateddAt));
+      setLatestTickets(sortedTickets);
     } catch (error) {
       toast.error(error.message || 'Failed to load latest tickets');
     }
   };
+  
 
   return (
     <div className="flex h-screen bg-gray-100 text-base">
       <Toaster />
-      <AdminSidebar />
-      <div className="flex-1 p-6 px-16 overflow-y-auto scrollbar-thin scrollbar-thumb-hidden scrollbar-track-hidden">
+      <Sidebar />
+      <div className="flex-1 p-6 px-16 overflow-y-auto scrollbar-thin scrollbar-thumb-hidden  scrollbar-track-hidden">
 
-        <AdminHeader user={user} />
+        <Header user={user} />
 
         {/* Filter Section */}
         <div className="flex items-center gap-4 p-2 rounded-lg border-gray-200 mt-4">
-          <label className="text-lg font-medium text-gray-700">Filter by:</label>
+          <label className="text-gray-700 font-medium">Filter by:</label>
 
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-fit px-3 py-2 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+            className="w-fit px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           >
             <option value="none">None</option>
             <option value="day">Day</option>
@@ -142,7 +177,7 @@ const AdminTrackAndView = () => {
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
               dateFormat="yyyy-MM-dd"
-              className="w-[140px] px-3 py-2 text-lg border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              className="w-[140px] px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholderText="Select a date"
             />
           )}
@@ -150,7 +185,7 @@ const AdminTrackAndView = () => {
 
         {/* Status Boxes */}
         <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-          {[
+          {[ 
             { label: 'Total Tickets', value: ticketStats.totalNumber, status: '' },
             { label: 'Active Tickets', value: ticketStats.activelNumber, status: 'ACTIVE' },
             { label: 'Not Active Tickets', value: ticketStats.notActiveNumber, status: 'NOT_ACTIVE' },
@@ -159,24 +194,23 @@ const AdminTrackAndView = () => {
             <div
               key={label}
               className={`flex flex-col items-center justify-center min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2 cursor-pointer transition duration-300 transform hover:scale-105 
-                ${selectedStatus === status
+        ${selectedStatus === status
                   ? 'bg-blue-900 text-white shadow-xl ring-2 ring-blue-500' // Active: Blue background, white text, ring
                   : 'bg-gray-200 text-gray-700' // Default: Gray background, dark text
                 }
-                hover:ring-2 hover:ring-blue-400`}
+        hover:ring-2 hover:ring-blue-400`}
               onClick={() => {
                 const newStatus = status === selectedStatus ? '' : status;
                 setSelectedStatus(newStatus);
                 updateURLParams(filter, selectedDate, newStatus);
               }}
             >
-              <span className="text-xl font-semibold">{label}</span>
+              <span className="text-lg font-semibold">{label}</span>
               <span className="text-4xl font-bold">{value}</span>
             </div>
           ))}
         </div>
 
-        {/* Ticket List */}
         <div className="  mt-10 h-3/5 overflow-y-auto border-t border-gray-200 rounded-lg p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
           {latestTickets.length > 0 ? (
             latestTickets.map((ticket) => (
@@ -184,6 +218,7 @@ const AdminTrackAndView = () => {
                 key={ticket.id}
                 className="flex flex-col gap-3 bg-white rounded-xl shadow-md p-4 mb-4 transition duration-300 transform hover:scale-102 hover:shadow-lg hover:ring-2 hover:ring-blue-300 cursor-pointer"
                 onClick={() => navigate(`/get_ticket_by_id_it/${ticket.ticketId}`)}
+                
               >
                 <div className="flex justify-between items-center ">
                   <p className="text-lg font-semibold text-gray-900">{`ID: ${ticket.ticketId}`}</p>
@@ -206,6 +241,8 @@ const AdminTrackAndView = () => {
                     <span>{new Date(ticket.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
+
+
               </div>
             ))
           ) : (
@@ -218,4 +255,4 @@ const AdminTrackAndView = () => {
   );
 };
 
-export default AdminTrackAndView;
+export default TrackAndViewTicketsAdmin;

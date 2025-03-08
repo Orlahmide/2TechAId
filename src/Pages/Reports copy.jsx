@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import AdminSidebar from "../Components/AdminSidebar";
 import Header from "../Components/Header";
 import { AuthContext } from "../Context/AuthContext";
+import AdminHeader from "../Components/AdminHeader";
 
 
 const Report = () => {
@@ -59,7 +60,7 @@ const Report = () => {
     <AdminSidebar />
 
     <div className="flex-1 p-6 overflow-y-auto">
-      <Header user={user} />
+      <AdminHeader user={user} />
     <div className="p-6 bg-white shadow-md rounded-2xl mt-16">
       <h2 className="text-2xl font-semibold mb-4">Ticket Analytics</h2>
       <select

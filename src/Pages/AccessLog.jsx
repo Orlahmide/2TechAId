@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import AdminSidebar from '../Components/AdminSidebar';
 import { AuthContext } from "../Context/AuthContext";
 import Header from '../Components/Header';
+import AdminHeader from '../Components/AdminHeader';
 
 const AccessLog = () => {
     const { user } = useContext(AuthContext);
@@ -41,7 +42,7 @@ const AccessLog = () => {
         <div className="flex h-screen bg-gray-100">
             <AdminSidebar />
             <div className="flex-1 p-6 px-16 overflow-y-auto">
-                <Header user={user} />
+                <AdminHeader user={user} />
 
                 {/* Container for Filter and Access Log on the same line */}
                 <div className="flex justify-between items-center mt-6">

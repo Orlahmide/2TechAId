@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import AdminSidebar from '../Components/AdminSidebar';
 import { useNavigate } from 'react-router-dom';
 import Marquise from '../Components/Marquise';
+import AdminHeader from '../Components/AdminHeader';
 
 const AdminDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -101,7 +102,7 @@ const AdminDashboard = () => {
       <AdminSidebar />
 
       <div className="flex-1 p-6 overflow-y-auto h-screen relative px-16">
-        <Header user={user} />
+        <AdminHeader user={user} />
 
         {/* Stats Grid */}
         <div className="grid w-full mt-14 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
@@ -132,7 +133,7 @@ const AdminDashboard = () => {
                 <div
                   key={ticket.id}
                   className="bg-white p-5 rounded-xl shadow-md border border-gray-300 flex flex-col gap-3 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl hover:border-blue-500 hover:ring-2 hover:ring-blue-500 hover:ring-opacity-50"
-                  onClick={() => navigate(`/get_ticket_by_id/${ticket.ticketId}`)}
+                  onClick={() => navigate(`/get_ticket_by_id_it/${ticket.ticketId}`)}
                 >
                   <div className="flex justify-end">
                     <span
