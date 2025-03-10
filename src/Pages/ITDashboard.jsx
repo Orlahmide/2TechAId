@@ -87,7 +87,7 @@ const IT_PERSONNEL = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5215/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=none', {
+      const response = await fetch('http://localhost:5215/api/ticket/Ticket/filter?filter=none&status=ACTIVE', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -100,7 +100,7 @@ const IT_PERSONNEL = () => {
       }
 
       const data = await response.json();
-      const sortedTickets = data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 6);
+      const sortedTickets = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 6);
       setLatestTickets(sortedTickets);
     } catch (error) {
       toast.error(error.message || 'Failed to load latest tickets');
@@ -145,22 +145,34 @@ const IT_PERSONNEL = () => {
           )}
         </div>
 
-        {/* Stats Display */}
         <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
-          {['Total', 'Active', 'Not Active', 'Completed'].map((status, index) => {
-            const statKeys = ['totalNumber', 'activeNumber', 'notActiveNumber', 'completedNumber'];
-            return (
-              <div key={index} className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-                <span className="text-xl font-semibold text-gray-700">{status} Tickets</span>
-                <span className="text-5xl font-bold text-gray-900">{ticketStats[statKeys[index]]}</span>
-              </div>
-            );
-          })}
+          {[
+            { label: 'Total Tickets', value: ticketStats.totalNumber, status: '' },
+            { label: 'Active Tickets', value: ticketStats.activeNumber, status: 'ACTIVE' },
+            { label: 'Not Active Tickets', value: ticketStats.notActiveNumber, status: 'NOT_ACTIVE' },
+            { label: 'Completed Tickets', value: ticketStats.completedNumber, status: 'COMPLETED' }
+          ].map(({ label, value, status }) => (
+            <div
+              key={label}
+              className="flex flex-col items-center justify-center min-w-[250px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2 cursor-pointer transition duration-300 transform hover:scale-105 bg-gray-200 text-gray-700 hover:ring-2 hover:ring-blue-400"
+              onClick={() => {
+                const queryParams = new URLSearchParams();
+                queryParams.set('filter', 'none');
+                if (status) {
+                  queryParams.set('status', status);
+                }
+                navigate(`/track-tickets-it?${queryParams.toString()}`);
+              }}
+            >
+              <span className="text-lg font-semibold">{label}</span>
+              <span className="text-4xl font-bold">{value}</span>
+            </div>
+          ))}
         </div>
 
         {/* Recent Tickets */}
         <div className="mt-14">
-          <h2 className="text-3xl font-semibold text-gray-800 mb-4">Recent Unassigned Tickets</h2>
+          <h2 className="text-3xl font-semibold text-gray-800 mb-4">Recent Assigned Tickets</h2>
           <div className={latestTickets.length > 0 ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' : 'flex items-center justify-center h-80 w-full'}>
             {latestTickets.length > 0 ? (
               latestTickets.map((ticket) => (
@@ -207,7 +219,7 @@ const IT_PERSONNEL = () => {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-3xl">No recent unassigned tickets available.</p>
+              <p className="text-gray-500 text-3xl">No recent ssigned tickets available.</p>
             )}
           </div>
         </div>

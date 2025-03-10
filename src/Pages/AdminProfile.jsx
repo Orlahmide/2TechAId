@@ -118,7 +118,7 @@ const AdminProfile = () => {
         <AdminHeader user={user} />
 
         {/* Profile Card */}
-        <div className="max-w-full mx-auto h-4/6 rounded-lg p-8 mt-12 bg-white shadow-md">
+        <div className="max-w-full mx-auto h-5/6 rounded-lg p-8 mt-12 bg-white shadow-md">
           {/* Avatar, Name, and Email */}
           <div className="flex items-center gap-6 mb-6">
             <div className="w-16 h-16 bg-blue-700 text-white text-xl font-semibold rounded-full flex items-center justify-center">

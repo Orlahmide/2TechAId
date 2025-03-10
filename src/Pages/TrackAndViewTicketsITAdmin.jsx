@@ -140,7 +140,7 @@ const TrackAndViewTicketsAdmin = () => {
       }
   
       const data = await response.json();
-      const sortedTickets = data.sort((a, b) => new Date(b.updateddAt) - new Date(a.updateddAt));
+      const sortedTickets = data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setLatestTickets(sortedTickets);
     } catch (error) {
       toast.error(error.message || 'Failed to load latest tickets');

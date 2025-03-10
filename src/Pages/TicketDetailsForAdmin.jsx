@@ -76,7 +76,7 @@ const TicketDetailsForAdmin = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}&employeeId=${employeeId}`,
+        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}&id=${employeeId}`,
         {
           method: 'POST',
           headers: {
@@ -161,13 +161,28 @@ const TicketDetailsForAdmin = () => {
                 </div>
               </div>
 
-              {/* Status Box */}
-              <div className={`p-4 rounded-lg shadow-md text-white font-medium mt-5
-                ${status === 'NOT_ACTIVE' ? 'bg-gray-500' :
-                  status === 'ACTIVE' ? 'bg-yellow-500' :
-                    'bg-green-500'}`}>
-                Status: {status.replace('_', ' ')}
-              </div>
+              {ticket.status === 'ACTIVE' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+                  <div className="bg-yellow-100 p-4 rounded-lg shadow-md">
+                    <span className="text-gray-800 font-medium">
+                      Assigned to: {ticket.iT_Personel_FirstName} {ticket.iT_Personel_LastName}
+                    </span>
+                  </div>
+                  <div className="bg-yellow-100 p-4 rounded-lg shadow-md">
+                    <span className="text-gray-800 font-medium">
+                      Email: {ticket.iT_Personel_Email}
+                    </span>
+                  </div>
+                  <div className="bg-yellow-100 p-4 rounded-lg shadow-md">
+                    <span className="text-gray-800 font-medium">
+                      Date Assigned: {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleDateString() : 'N/A'}
+                    </span>
+                  </div>
+
+
+
+                </div>
+              )}
             </>
           ) : (
             <div className="text-center text-gray-600 text-lg font-medium">

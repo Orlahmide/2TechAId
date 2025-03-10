@@ -58,8 +58,10 @@ const TicketDetailsForIT = () => {
   const assignTicket = async () => {
     try {
       const token = localStorage.getItem('accessToken');
+  
+      // Construct the URL with ticketId and employeeId as query parameters
       const response = await fetch(
-        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}`, // Ticket ID as a query param
+        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}`, 
         {
           method: 'POST',
           headers: {
@@ -68,15 +70,16 @@ const TicketDetailsForIT = () => {
           }
         }
       );
-
+  
       if (!response.ok) throw new Error('Failed to assign ticket');
-
+  
       toast.success('Ticket assigned successfully');
       fetchTicketDetails(); // Refresh data
     } catch (error) {
       toast.error(error.message || 'Error assigning ticket');
     }
   };
+  
 
 
   const [isResolved, setIsResolved] = useState(false);

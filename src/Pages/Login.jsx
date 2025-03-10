@@ -90,9 +90,7 @@ const Login = () => {
               Login
             </button>
           </form>
-          <p className="mt-8 text-center text-gray-600 text-lg">
-            Don't have an account? <Link to="/create-account" className="text-blue-500">Signup Here</Link>
-          </p>
+         
         </div>
 
       </div>

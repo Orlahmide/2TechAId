@@ -110,7 +110,7 @@ const ProfilePage = () => {
       <div className="flex-1 p-6 px-16 overflow-y-auto">
         <Header user={user} />
 
-        <div className="max-w-full mx-auto h-4/6 rounded-lg p-8 mt-12 bg-white shadow-md">
+        <div className="max-w-full mx-auto h-5/6 rounded-lg p-8 mt-12 bg-white shadow-md">
           <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
             <div className="w-20 h-20 bg-blue-700 text-white text-2xl font-semibold rounded-full flex items-center justify-center">
               {originalUser

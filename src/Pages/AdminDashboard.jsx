@@ -25,12 +25,17 @@ const AdminDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
   // Fetch ticket stats when filter or selectedDate changes
-  useEffect(() => {
-    fetchLatestTickets();
-    if (filter !== 'set' || (filter === 'set' && selectedDate)) {
-      fetchTicketStats();
-    }
-  }, [filter, selectedDate]);
+// Fetch ticket stats when filter or selectedDate changes
+useEffect(() => {
+  if (filter === 'set' && (!selectedDate || selectedDate === '')) {
+    return; // Prevent API call if filter is "set" but no date is provided
+  }
+
+  fetchLatestTickets();
+  fetchTicketStats();
+}, [filter, selectedDate]);
+
+
 
   // Fetch ticket stats from the API
   const fetchTicketStats = async () => {
@@ -76,7 +81,7 @@ const AdminDashboard = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5215/api/ticket/Ticket/filter_for_admin?filter=none', {
+      const response = await fetch('http://localhost:5215/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=none', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -104,24 +109,29 @@ const AdminDashboard = () => {
       <div className="flex-1 p-6 overflow-y-auto h-screen relative px-16">
         <AdminHeader user={user} />
 
-        {/* Stats Grid */}
-        <div className="grid w-full mt-14 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Total Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.totalNumber}</span>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Active Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.activelNumber}</span>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Not Active Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.notActiveNumber}</span>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Completed Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.completedNumber}</span>
-          </div>
+        <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
+          {[
+            { label: 'Total Tickets', value: ticketStats.totalNumber, status: '' },
+            { label: 'Active Tickets', value: ticketStats.activelNumber, status: 'ACTIVE' },
+            { label: 'Not Active Tickets', value: ticketStats.notActiveNumber, status: 'NOT_ACTIVE' },
+            { label: 'Completed Tickets', value: ticketStats.completedNumber, status: 'COMPLETED' }
+          ].map(({ label, value, status }) => (
+            <div
+              key={label}
+              className="flex flex-col items-center justify-center min-w-[250px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2 cursor-pointer transition duration-300 transform hover:scale-105 bg-gray-200 text-gray-700 hover:ring-2 hover:ring-blue-400"
+              onClick={() => {
+                const queryParams = new URLSearchParams();
+                queryParams.set('filter', 'none');
+                if (status) {
+                  queryParams.set('status', status);
+                }
+                navigate(`/admintrackandview?${queryParams.toString()}`);
+              }}
+            >
+              <span className="text-lg font-semibold">{label}</span>
+              <span className="text-4xl font-bold">{value}</span>
+            </div>
+          ))}
         </div>
 
         {/* Latest Tickets Section */}

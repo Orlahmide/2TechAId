@@ -10,8 +10,42 @@ const Header = ({ user }) => {
   const [notActiveCount, setNotActiveCount] = useState(0);
   const navigate = useNavigate();
 
+  // Fetch user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) return;
+
+        const response = await fetch("http://localhost:5215/api/Employees/get_employee_id", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch user data");
+
+        const data = await response.json();
+        setUserData(data);
+
+        // Disable notifications if the role is BANK_STAFF
+        if (data.role === "BANK_STAFF") {
+          setNotActiveCount(0); // Ensure notifications are off
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   // Fetch ticket counts to determine notification status
   useEffect(() => {
+    if (!userData || userData.role === "BANK_STAFF") return; // Skip fetching if role is BANK_STAFF
+
     const fetchTicketCounts = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -38,34 +72,7 @@ const Header = ({ user }) => {
     const interval = setInterval(fetchTicketCounts, 60000); // Auto-refresh every 1 minute
 
     return () => clearInterval(interval);
-  }, []);
-
-  // Fetch user data
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) return;
-
-        const response = await fetch("http://localhost:5215/api/Employees/get_employee_id", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch user data");
-
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    fetchUserData();
-  }, []);
+  }, [userData]); // Only run when userData is fetched
 
   const getInitials = (firstName, lastName) => {
     if (!firstName || !lastName) return "GU";

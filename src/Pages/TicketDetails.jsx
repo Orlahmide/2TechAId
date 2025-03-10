@@ -47,8 +47,8 @@ const TicketDetails = () => {
         return;
       }
   
-      if (!response.ok) {
-        throw new Error('Failed to fetch ticket details');
+      if (response.status === 404) {
+        throw new Error('Ticket not found');
       }
   
       const data = await response.json();
@@ -176,7 +176,7 @@ const TicketDetails = () => {
             </>
           ) : (
             <div className="text-center text-gray-600 text-lg font-medium">
-              Ticket details not found.
+              Ticket details not found!.
             </div>
           )}
         </div>

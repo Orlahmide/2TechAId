@@ -15,7 +15,7 @@ const StaffDashboard = () => {
   const [ticketStats, setTicketStats] = useState({
     totalNumber: 0,
     activelNumber: 0,
-    notActiveNumber: 0,
+    notActivelNumber: 0,
     completedNumber: 0
   });
 
@@ -125,23 +125,29 @@ const StaffDashboard = () => {
           </button>
         </div>
 
-        <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Total Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.totalNumber}</span>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Active Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.activelNumber}</span>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Not Active Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.notActiveNumber}</span>
-          </div>
-          <div className="flex flex-col items-center justify-center bg-gray-200 min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2">
-            <span className="text-xl font-semibold text-gray-700">Completed Tickets</span>
-            <span className="text-5xl font-bold text-gray-900">{ticketStats.completedNumber}</span>
-          </div>
+        <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-1">
+          {[
+            { label: 'Total Tickets', value: ticketStats.totalNumber, status: '' },
+            { label: 'Active Tickets', value: ticketStats.activelNumber, status: 'ACTIVE' },
+            { label: 'Not Active Tickets', value: ticketStats.notActiveNumber, status: 'NOT_ACTIVE' },
+            { label: 'Completed Tickets', value: ticketStats.completedNumber, status: 'COMPLETED' }
+          ].map(({ label, value, status }) => (
+            <div
+              key={label}
+              className="flex flex-col items-center justify-center min-w-[250px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2 cursor-pointer transition duration-300 transform hover:scale-105 bg-gray-200 text-gray-700 hover:ring-2 hover:ring-blue-400"
+              onClick={() => {
+                const queryParams = new URLSearchParams();
+                queryParams.set('filter', 'none');
+                if (status) {
+                  queryParams.set('status', status);
+                }
+                navigate(`/track-tickets?${queryParams.toString()}`);
+              }}
+            >
+              <span className="text-lg font-semibold">{label}</span>
+              <span className="text-4xl font-bold">{value}</span>
+            </div>
+          ))}
         </div>
 
        {/* Recent Tickets */}

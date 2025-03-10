@@ -24,6 +24,9 @@
   import KnowledgeBase from "./Pages/KnowledgeBase";
   import Analytics from "./Pages/Analytics.";
   import TicketDetailsForAdmin from "./Pages/TicketDetailsForAdmin";
+import NotificationsPage from "./aisha/Notification";
+import AttendancePage from "./aisha/Attendancepage";
+import PayrollPage from "./aisha/Payroll";
 
 
 
@@ -41,6 +44,10 @@
             <Route path="/create-account" element={<CreateAccount />} />
             <Route path="/create-account_it" element={<CreateAccountITPersonnel/>} />
             <Route path="/create-account_admin" element={<CreateAccountAdmin/>} />
+            <Route path="/notification" element={<NotificationsPage/>} />
+              <Route path="/attendance" element={<AttendancePage/>} />
+              <Route path="/payroll" element={<PayrollPage/>} />
+
             
             {/* Protected Routes */}
             <Route element={<PrivateRoute/>}>
@@ -65,7 +72,7 @@
               <Route path="/accesslog" element={<AccessLog />} />
               <Route path="/knowledge" element={<KnowledgeBase/>} />
               <Route path="/report" element={<Analytics/>} />
-
+              
             </Route>
           </Routes>
         </Router>

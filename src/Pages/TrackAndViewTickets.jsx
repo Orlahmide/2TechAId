@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-
 import { AuthContext } from '../Context/AuthContext';
 import Header from '../Components/Header';
 import toast, { Toaster } from 'react-hot-toast';
@@ -39,7 +38,7 @@ const TrackAndViewTickets = () => {
     if (newStatus) {
       params.set('status', newStatus);
     }
-    setSearchParams(params);
+    setSearchParams(params); // Update the URL with new parameters
   };
 
   const fetchTicketStats = async () => {
@@ -112,13 +111,11 @@ const TrackAndViewTickets = () => {
     }
   };
 
-
   return (
     <div className="flex h-screen bg-gray-100 text-base">
       <Toaster />
-      <Sidebar/>
+      <Sidebar />
       <div className="flex-1 p-6 px-16 overflow-y-auto scrollbar-thin scrollbar-thumb-hidden  scrollbar-track-hidden">
-
         <Header user={user} />
 
         {/* Filter Section */}
@@ -127,7 +124,11 @@ const TrackAndViewTickets = () => {
 
           <select
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={(e) => {
+              const newFilter = e.target.value;
+              setFilter(newFilter);
+              updateURLParams(newFilter, selectedDate, selectedStatus);
+            }}
             className="w-fit px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
           >
             <option value="none">None</option>
@@ -140,14 +141,16 @@ const TrackAndViewTickets = () => {
           {filter === 'set' && (
             <DatePicker
               selected={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
+              onChange={(date) => {
+                setSelectedDate(date);
+                updateURLParams(filter, date, selectedStatus);
+              }}
               dateFormat="yyyy-MM-dd"
               className="w-[140px] px-2 py-1 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
               placeholderText="Select a date"
             />
           )}
         </div>
-
 
         {/* Status Boxes */}
         <div className="grid w-full mt-8 gap-9 grid-cols-4 xl:grid-cols-4 custom:grid-cols-2 md:grid-cols-2 sm:grid-cols-1">
@@ -161,9 +164,9 @@ const TrackAndViewTickets = () => {
               key={label}
               className={`flex flex-col items-center justify-center min-w-[200px] max-w-[350px] h-[133px] rounded-lg shadow-lg text-center gap-2 cursor-pointer transition duration-300 transform hover:scale-105 
         ${selectedStatus === status
-                  ? 'bg-blue-900 text-white shadow-xl ring-2 ring-blue-500' // Active: Blue background, white text, ring
-                  : 'bg-gray-200 text-gray-700' // Default: Gray background, dark text
-                }
+                ? 'bg-blue-900 text-white shadow-xl ring-2 ring-blue-500' // Active: Blue background, white text, ring
+                : 'bg-gray-200 text-gray-700' // Default: Gray background, dark text
+              }
         hover:ring-2 hover:ring-blue-400`}
               onClick={() => {
                 const newStatus = status === selectedStatus ? '' : status;
@@ -178,7 +181,7 @@ const TrackAndViewTickets = () => {
         </div>
 
         {/* Ticket List */}
-        <div className="  mt-10 h-3/5 overflow-y-auto border-t border-gray-200 rounded-lg p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+        <div className="mt-10 h-3/5 overflow-y-auto border-t border-gray-200 rounded-lg p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
           {latestTickets.length > 0 ? (
             latestTickets.map((ticket) => (
               <div
@@ -186,7 +189,7 @@ const TrackAndViewTickets = () => {
                 className="flex flex-col gap-3 bg-white rounded-xl shadow-md p-4 mb-4 transition duration-300 transform hover:scale-102 hover:shadow-lg hover:ring-2 hover:ring-blue-300 cursor-pointer"
                 onClick={() => navigate(`/get_ticket_by_id/${ticket.ticketId}`)}
               >
-                <div className="flex justify-between items-center ">
+                <div className="flex justify-between items-center">
                   <p className="text-lg font-semibold text-gray-900">{`ID: ${ticket.ticketId}`}</p>
                   <span className={`w-24 text-center px-2 py-1 text-sm font-medium rounded-full ${ticket.status === 'ACTIVE' ? 'bg-yellow-200 text-blue-800' : ticket.status === 'COMPLETED' ? 'bg-green-200 text-green-800' : 'bg-red-400 text-gray-800'}`}>
                     {ticket.status}
@@ -194,7 +197,7 @@ const TrackAndViewTickets = () => {
                 </div>
 
                 <div className="mt-3 flex justify-between text-base text-gray-600">
-                  <div className=" flex justify-start text-base text-start  text-gray-600 gap-60 w-2/4">
+                  <div className="flex justify-start text-base text-start text-gray-600 gap-60 w-2/4">
                     <div className="flex items-center gap-2 w-1/5 overflow-hidden">
                       <span>{ticket.subject}</span>
                     </div>
@@ -213,7 +216,6 @@ const TrackAndViewTickets = () => {
             <p className="text-center text-gray-500 text-3xl mt-40">No tickets available.</p>
           )}
         </div>
-
       </div>
     </div>
   );
