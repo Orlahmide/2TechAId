@@ -30,8 +30,8 @@ const TicketDetails = () => {
       // Determine the correct API URL based on role
       const baseURL =
         userRole === 'BANK_STAFF'
-          ? `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
-          : `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
+          ? `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
+          : `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
   
       const response = await fetch(baseURL, {
         method: 'GET',

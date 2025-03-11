@@ -49,7 +49,7 @@ const TrackAndViewTicketsAdmin = () => {
         return;
       }
 
-      let url = `http://localhost:5215/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
+      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         url += `&date=${formattedDate}`;
@@ -76,7 +76,7 @@ const TrackAndViewTicketsAdmin = () => {
       }));
 
       // Now fetch the 'notActiveNumber' from a different endpoint
-      const notActiveResponse = await fetch(`http://localhost:5215/api/ticket/Ticket/count_all?filter=${filter}`, {
+      const notActiveResponse = await fetch(`http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -110,10 +110,10 @@ const TrackAndViewTicketsAdmin = () => {
   
       if (selectedStatus === 'NOT_ACTIVE') {
         // Fetch for the 'NOT_ACTIVE' status using the specific endpoint
-        url = `http://localhost:5215/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=${filter}`;
+        url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=${filter}`;
       } else {
         // Default URL for all other statuses
-        url = `http://localhost:5215/api/ticket/Ticket/filter?filter=${filter}`;
+        url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=${filter}`;
       }
   
       // Add status filter to the URL if it's not 'NOT_ACTIVE'

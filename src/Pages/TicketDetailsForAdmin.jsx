@@ -37,8 +37,8 @@ const TicketDetailsForAdmin = () => {
 
       const baseURL =
         userRole === 'BANK_STAFF'
-          ? `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
-          : `http://localhost:5215/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
+          ? `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
+          : `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
 
       const response = await fetch(baseURL, {
         method: 'GET',
@@ -63,7 +63,7 @@ const TicketDetailsForAdmin = () => {
 
   const fetchEmployees = async () => {
     try {
-      const response = await fetch('http://localhost:5215/api/Employees');
+      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/Employees');
       if (!response.ok) throw new Error('Failed to fetch employees');
       const data = await response.json();
       const itPersonnel = data.filter(emp => emp.role === 'IT_PERSONNEL');
@@ -78,7 +78,7 @@ const TicketDetailsForAdmin = () => {
       setAssigning(true);
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}&id=${employeeId}`,
+        `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/assign?ticketId=${ticketId}&id=${employeeId}`,
         {
           method: 'POST',
           headers: {

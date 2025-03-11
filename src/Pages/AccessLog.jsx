@@ -14,7 +14,7 @@ const AccessLog = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:5215/api/Employees');
+                const response = await fetch('http://techaid-001-site1.ptempurl.com/api/Employees');
                 if (!response.ok) {
                     throw new Error('Failed to fetch users');
                 }

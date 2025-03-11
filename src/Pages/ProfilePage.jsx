@@ -25,7 +25,7 @@ const ProfilePage = () => {
           return;
         }
 
-        const response = await fetch("http://localhost:5215/api/Employees/get_employee_id", {
+        const response = await fetch("http://techaid-001-site1.ptempurl.com/api/Employees/get_employee_id", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ const ProfilePage = () => {
       };
 
       const response = await fetch(
-        `http://localhost:5215/api/Employees/update?department=${department}`,
+        `http://techaid-001-site1.ptempurl.com/api/Employees/update?department=${department}`,
         {
           method: "PATCH",
           headers: {

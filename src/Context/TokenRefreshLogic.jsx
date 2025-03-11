@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const API_URL = 'http://localhost:5215/api/Employees';
+const API_URL = 'http://techaid-001-site1.ptempurl.com/api/Employees';
 
 const useAuth = () => {
   useEffect(() => {

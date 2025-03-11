@@ -50,7 +50,7 @@ const AdminTrackAndView = () => {
         return;
       }
 
-      let url = `http://localhost:5215/api/ticket/Ticket/count_all?filter=${filter}`;
+      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         url += `&date=${formattedDate}`;
@@ -83,7 +83,7 @@ const AdminTrackAndView = () => {
         return;
       }
 
-      let url = `http://localhost:5215/api/ticket/Ticket/filter_for_admin?filter=${filter}`;
+      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter_for_admin?filter=${filter}`;
 
       if (selectedStatus) {
         url += `&status=${selectedStatus}`;

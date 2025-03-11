@@ -9,7 +9,7 @@ const StatsBox = () => {
 
   useEffect(() => {
     // Fetch all ticket count using axios
-    axios.get('http://localhost:5215/api/ticket/Ticket/get_all_ticket_count')
+    axios.get('http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_all_ticket_count')
       .then((response) => {
         setAllTickets(Number(response.data)); // Assuming the response is just a number
       })
@@ -18,7 +18,7 @@ const StatsBox = () => {
       });
 
     // Fetch completed ticket count using axios
-    axios.get('http://localhost:5215/api/ticket/Ticket/get_completed_ticket_count')
+    axios.get('http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_completed_ticket_count')
       .then((response) => {
         setCompletedTickets(Number(response.data)); // Assuming the response is just a number
       })
@@ -27,7 +27,7 @@ const StatsBox = () => {
       });
 
     // Fetch active ticket count using axios
-    axios.get('http://localhost:5215/api/ticket/Ticket/get_active_ticket_count')
+    axios.get('http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_active_ticket_count')
       .then((response) => {
         setActiveTickets(Number(response.data)); // Assuming the response is just a number
       })
