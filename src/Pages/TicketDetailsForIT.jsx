@@ -32,8 +32,8 @@ const TicketDetailsForIT = () => {
 
       const baseURL =
         userRole === 'BANK_STAFF'
-          ? `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
-          : `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
+          ? `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id?id=${ticketId}`
+          : `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/get_ticket_by_id_it?id=${ticketId}`;
 
       const response = await fetch(baseURL, {
         method: 'GET',
@@ -62,7 +62,7 @@ const TicketDetailsForIT = () => {
       const token = localStorage.getItem('accessToken');
 
       const response = await fetch(
-        `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/assign?ticketId=${ticketId}`,
+        `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/assign?ticketId=${ticketId}`,
         {
           method: 'POST',
           headers: {
@@ -91,7 +91,7 @@ const TicketDetailsForIT = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/mark_as_completed?ticId=${ticketId}&comment=${comment}`,
+        `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/mark_as_completed?ticId=${ticketId}&comment=${comment}`,
         {
           method: 'POST',
           headers: {

@@ -1,18 +1,18 @@
 import React from "react";
 
 const employees = [
-  { name: "Leasie Watson", ctc: "$45000", salary: "$3500", deduction: "-", status: "Completed", image: "https://randomuser.me/api/portraits/women/1.jpg" },
-  { name: "Darlene Robertson", ctc: "$78000", salary: "$6400", deduction: "$100", status: "Completed", image: "https://randomuser.me/api/portraits/women/2.jpg" },
-  { name: "Jacob Jones", ctc: "$60000", salary: "$5000", deduction: "$250", status: "Completed", image: "https://randomuser.me/api/portraits/men/1.jpg" },
-  { name: "Kathryn Murphy", ctc: "$34000", salary: "$2800", deduction: "-", status: "Pending", image: "https://randomuser.me/api/portraits/women/3.jpg" },
-  { name: "Leslie Alexander", ctc: "$40000", salary: "$3400", deduction: "-", status: "Pending", image: "https://randomuser.me/api/portraits/men/2.jpg" },
-  { name: "Ronald Richards", ctc: "$45000", salary: "$3500", deduction: "-", status: "Completed", image: "https://randomuser.me/api/portraits/men/3.jpg" },
-  { name: "Guy Hawkins", ctc: "$55000", salary: "$4000", deduction: "$50", status: "Pending", image: "https://randomuser.me/api/portraits/men/4.jpg" },
-  { name: "Albert Flores", ctc: "$60000", salary: "$5000", deduction: "$150", status: "Completed", image: "https://randomuser.me/api/portraits/men/5.jpg" },
-  { name: "Savannah Nguyen", ctc: "$25000", salary: "$2200", deduction: "-", status: "Pending", image: "https://randomuser.me/api/portraits/women/4.jpg" },
-  { name: "Marvin McKinney", ctc: "$30000", salary: "$2700", deduction: "-", status: "Completed", image: "https://randomuser.me/api/portraits/men/6.jpg" },
-  { name: "Jerome Bell", ctc: "$78000", salary: "$6400", deduction: "-", status: "Completed", image: "https://randomuser.me/api/portraits/men/7.jpg" },
-  { name: "Jenny Wilson", ctc: "$45000", salary: "$3500", deduction: "$100", status: "Pending", image: "https://randomuser.me/api/portraits/women/5.jpg" }
+  { name: "Leasie Watson", ctc: "$45000", salary: "$3500", deduction: "-", status: "Completed", image: "httpss://randomuser.me/api/portraits/women/1.jpg" },
+  { name: "Darlene Robertson", ctc: "$78000", salary: "$6400", deduction: "$100", status: "Completed", image: "httpss://randomuser.me/api/portraits/women/2.jpg" },
+  { name: "Jacob Jones", ctc: "$60000", salary: "$5000", deduction: "$250", status: "Completed", image: "httpss://randomuser.me/api/portraits/men/1.jpg" },
+  { name: "Kathryn Murphy", ctc: "$34000", salary: "$2800", deduction: "-", status: "Pending", image: "httpss://randomuser.me/api/portraits/women/3.jpg" },
+  { name: "Leslie Alexander", ctc: "$40000", salary: "$3400", deduction: "-", status: "Pending", image: "httpss://randomuser.me/api/portraits/men/2.jpg" },
+  { name: "Ronald Richards", ctc: "$45000", salary: "$3500", deduction: "-", status: "Completed", image: "httpss://randomuser.me/api/portraits/men/3.jpg" },
+  { name: "Guy Hawkins", ctc: "$55000", salary: "$4000", deduction: "$50", status: "Pending", image: "httpss://randomuser.me/api/portraits/men/4.jpg" },
+  { name: "Albert Flores", ctc: "$60000", salary: "$5000", deduction: "$150", status: "Completed", image: "httpss://randomuser.me/api/portraits/men/5.jpg" },
+  { name: "Savannah Nguyen", ctc: "$25000", salary: "$2200", deduction: "-", status: "Pending", image: "httpss://randomuser.me/api/portraits/women/4.jpg" },
+  { name: "Marvin McKinney", ctc: "$30000", salary: "$2700", deduction: "-", status: "Completed", image: "httpss://randomuser.me/api/portraits/men/6.jpg" },
+  { name: "Jerome Bell", ctc: "$78000", salary: "$6400", deduction: "-", status: "Completed", image: "httpss://randomuser.me/api/portraits/men/7.jpg" },
+  { name: "Jenny Wilson", ctc: "$45000", salary: "$3500", deduction: "$100", status: "Pending", image: "httpss://randomuser.me/api/portraits/women/5.jpg" }
 ];
 
 const PayrollPage = () => {

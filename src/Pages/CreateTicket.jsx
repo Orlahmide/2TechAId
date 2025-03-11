@@ -50,7 +50,7 @@ export default function CreateTicket() {
         return;
       }
 
-      const url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/create_new?department=${encodeURIComponent(
+      const url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/create_new?department=${encodeURIComponent(
         department
       )}&priority=${encodeURIComponent(priority)}&category=${encodeURIComponent(category)}`;
 

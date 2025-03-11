@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         email: 'staff@example.com',
         password: 'password',
         role: 'staff',
-        profile: { name: 'John Doe', image: 'https://via.placeholder.com/40' },
+        profile: { name: 'John Doe', image: 'httpss://via.placeholder.com/40' },
       },
       { email: 'admin@example.com', password: 'password', role: 'admin' },
     ];
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     const newUser = {
       email,
       role,
-      profile: { name, image: 'https://via.placeholder.com/40' },
+      profile: { name, image: 'httpss://via.placeholder.com/40' },
     };
 
     setUser(newUser);
