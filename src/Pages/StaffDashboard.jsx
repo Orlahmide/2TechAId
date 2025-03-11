@@ -38,7 +38,7 @@ const StaffDashboard = () => {
         return;
       }
 
-      let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
+      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
         url += `&date=${formattedDate}`;
@@ -71,7 +71,7 @@ const StaffDashboard = () => {
         return;
       }
 
-      const response = await fetch('https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=none', {
+      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=none', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

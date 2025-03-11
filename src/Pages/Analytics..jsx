@@ -23,7 +23,7 @@ import jsPDF from "jspdf";
 import AdminDashboard from "./AdminDashboard";
 import AdminHeader from "../Components/AdminHeader";
 
-const API_URL = "https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/analytics";
+const API_URL = "http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/analytics";
 
 const Analytics = () => {
     const { user } = useContext(AuthContext);

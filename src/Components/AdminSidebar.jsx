@@ -43,7 +43,7 @@ const AdminSidebar = () => {
     }
 
     try {
-      const response = await fetch('https://techaid-001-site1.ptempurl.com/api/Employees/logout', {
+      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/Employees/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

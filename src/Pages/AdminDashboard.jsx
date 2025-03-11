@@ -46,7 +46,7 @@ useEffect(() => {
         return;
       }
 
-      let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`;
+      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`;
 
       if (filter === 'set' && selectedDate) {
         const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
@@ -81,7 +81,7 @@ useEffect(() => {
         return;
       }
 
-      const response = await fetch('https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=none', {
+      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter_for_admin?status=NOT_ACTIVE&filter=none', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

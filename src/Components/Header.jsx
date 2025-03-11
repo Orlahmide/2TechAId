@@ -17,7 +17,7 @@ const Header = ({ user }) => {
         const token = localStorage.getItem("accessToken");
         if (!token) return;
 
-        const response = await fetch("https://techaid-001-site1.ptempurl.com/api/Employees/get_employee_id", {
+        const response = await fetch("http://techaid-001-site1.ptempurl.com/api/Employees/get_employee_id", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const Header = ({ user }) => {
         const token = localStorage.getItem("accessToken");
         if (!token) return;
 
-        const response = await fetch("https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=none", {
+        const response = await fetch("http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=none", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
