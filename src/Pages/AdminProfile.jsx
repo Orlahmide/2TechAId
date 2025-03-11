@@ -28,7 +28,7 @@ const AdminProfile = () => {
           return;
         }
 
-        const response = await fetch("http://techaid-001-site1.ptempurl.com/api/Employees/get_employee_id", {
+        const response = await fetch("https://techaid-001-site1.ptempurl.com/api/Employees/get_employee_id", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -85,7 +85,7 @@ const AdminProfile = () => {
 
       // Send update request
       const response = await fetch(
-        `http://techaid-001-site1.ptempurl.com/api/Employees/update?department=${department}`,
+        `https://techaid-001-site1.ptempurl.com/api/Employees/update?department=${department}`,
         {
           method: "PATCH",
           headers: {

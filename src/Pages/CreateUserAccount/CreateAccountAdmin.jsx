@@ -24,7 +24,7 @@ const  CreateAccountAdmin = () => {
     };
 
     try {
-      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/Employees', {
+      const response = await fetch('https://techaid-001-site1.ptempurl.com/api/Employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser),

@@ -31,7 +31,7 @@ const IT_PERSONNEL = () => {
         return;
       }
 
-      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
+      let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
         url += `&date=${formattedDate}`;
@@ -57,7 +57,7 @@ const IT_PERSONNEL = () => {
         completedNumber: data.completedNumber,
       }));
 
-      const notActiveResponse = await fetch(`http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`, {
+      const notActiveResponse = await fetch(`https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -87,7 +87,7 @@ const IT_PERSONNEL = () => {
         return;
       }
 
-      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=none&status=ACTIVE', {
+      const response = await fetch('https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=none&status=ACTIVE', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

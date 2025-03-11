@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://techaid-001-site1.ptempurl.com/api/Employees/login', {
+      const response = await fetch('https://techaid-001-site1.ptempurl.com/api/Employees/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

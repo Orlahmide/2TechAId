@@ -49,7 +49,7 @@ const TrackAndViewTickets = () => {
         return;
       }
 
-      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
+      let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         url += `&date=${formattedDate}`;
@@ -82,7 +82,7 @@ const TrackAndViewTickets = () => {
         return;
       }
 
-      let url = `http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=${filter}`;
+      let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/filter?filter=${filter}`;
       if (selectedStatus) {
         url += `&status=${selectedStatus}`;
       }

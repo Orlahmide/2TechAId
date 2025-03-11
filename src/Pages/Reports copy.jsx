@@ -18,7 +18,7 @@ const Report = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch(`http://techaid-001-site1.ptempurl.com/api/ticket/Ticket/analytics?filter=${filter}`, {
+      const response = await fetch(`https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/analytics?filter=${filter}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
