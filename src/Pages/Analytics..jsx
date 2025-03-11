@@ -103,7 +103,7 @@ const Analytics = () => {
 
     // Dropdown options
     const dropdownOptions = [
-        { label: "Filter", state: filter, setState: setFilter, options: ["day", "week", "month"] },
+        { label: "Filter", state: filter, setState: setFilter, options: ["Day", "Week", "Month"] },
         { label: "Status", state: status, setState: setStatus, options: ["", "ACTIVE", "NOT_ACTIVE"] },
         { label: "Priority", state: priority, setState: setPriority, options: ["", "HIGH", "MEDIUM", "LOW"] },
         { label: "Category", state: category, setState: setCategory, options: ["", "HARDWARE", "SOFTWARE", "NETWORK", "TRANSACTION"] },
@@ -126,32 +126,48 @@ const Analytics = () => {
         }
         return null;
     };
-    
+
     const downloadPDF = () => {
         if (!contentRef.current) {
             console.error("Reference to element is null");
             return;
         }
     
-        setTimeout(() => { // Add delay to ensure everything is fully rendered
+        requestAnimationFrame(() => {
             html2canvas(contentRef.current, {
-                scale: 2,
-                useCORS: true,
+                scale: window.devicePixelRatio * 2, // Improve image quality
+                useCORS: true, // Allow cross-origin images
                 backgroundColor: "#fff",
-                logging: true, // Helps debug issues
             }).then((canvas) => {
                 const imgData = canvas.toDataURL("image/png");
                 const pdf = new jsPDF("p", "mm", "a4");
-                const imgWidth = 210;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+    
+                const imgWidth = 210; // A4 width in mm
+                const imgHeight = 180;
+    
+                if (imgHeight > 297) { // A4 page height is 297mm
+                    let position = 10;
+                    let pageHeight = 120;
+                    let remainingHeight = imgHeight;
+    
+                    while (remainingHeight > 0) {
+                        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+                        remainingHeight -= pageHeight;
+                        position -= 297;
+                        if (remainingHeight > 0) {
+                            pdf.addPage();
+                        }
+                    }
+                } else {
+                    pdf.addImage(imgData, "PNG", 0, 10, imgWidth, imgHeight);
+                }
+    
                 pdf.save("analytics_report.pdf");
             });
-        }, 500); // Delay of 500ms to ensure the DOM is fully rendered
+        });
     };
     
-    
-    
+
 
     return (
         <div className="flex h-screen bg-gray-100 text-base">
@@ -183,13 +199,17 @@ const Analytics = () => {
                         ))}
                     </div>
 
-                       {/* Dropdown Filters */}
-                <div className="flex items-center justify-between px-8 mt-4" >
-                    <div className="flex gap-6">{/* Filter dropdowns remain unchanged */}</div>
-                    <div className="text-4xl text-gray-700 cursor-pointer" onClick={downloadPDF}>
-                        <AiOutlineDownload />
+                    {/* Dropdown Filters */}
+                    <div className="flex items-center justify-between px-8 mt-4">
+                        <div className="flex gap-6">{/* Filter dropdowns remain unchanged */}</div>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                            onClick={downloadPDF}
+                        >
+                            Download Report
+                        </button>
                     </div>
-                </div>
+
                 </div>
 
                 {/* Charts Section */}
@@ -227,7 +247,7 @@ const Analytics = () => {
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="day" />
                                             <YAxis />
-                                            <Tooltip  content={<CustomTooltip />} />
+                                            <Tooltip content={<CustomTooltip />} />
                                             <Bar dataKey="tickets" fill="#0B1D69" barSize={40} shape={<Rectangle radius={[20, 20, 0, 0]} />} />
                                         </BarChart>
                                     </ResponsiveContainer>
