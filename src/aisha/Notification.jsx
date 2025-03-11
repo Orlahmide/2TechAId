@@ -7,7 +7,7 @@ const notifications = [
     title: "Leave Request",
     message: "@Robert Fox has applied for leave",
     time: "Just Now",
-    image: "httpss://th.bing.com/th/id/OIP.9w39gOogiW0CzEDNINjnwQHaE7?rs=1&pid=ImgDetMain"
+    image: "https://th.bing.com/th/id/OIP.9w39gOogiW0CzEDNINjnwQHaE7?rs=1&pid=ImgDetMain"
   },
   {
     id: 2,
@@ -15,7 +15,7 @@ const notifications = [
     title: "Check In Issue",
     message: "@Alexa shared a message regarding check-in issue",
     time: "11:16 AM",
-    image: "httpss://miro.medium.com/v2/resize:fit:2400/1*Mw1Yhy3Z3TiV0mZkF4UInw.jpeg"
+    image: "https://miro.medium.com/v2/resize:fit:2400/1*Mw1Yhy3Z3TiV0mZkF4UInw.jpeg"
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ const notifications = [
     title: "Applied job for \"Sales Manager\" Position",
     message: "@shane Watson has applied for job",
     time: "09:00 AM",
-    image: "httpss://th.bing.com/th/id/OIP.K3J7a2RsMjozb6HT9wmxYQHaFj?rs=1&pid=ImgDetMain"
+    image: "https://th.bing.com/th/id/OIP.K3J7a2RsMjozb6HT9wmxYQHaFj?rs=1&pid=ImgDetMain"
   },
   {
     id: 4,
@@ -31,7 +31,7 @@ const notifications = [
     title: "Robert Fox has shared his feedback",
     message: "\"It was an amazing experience with your organisation\"",
     time: "Yesterday",
-    image: "httpss://thumbs.dreamstime.com/z/pretty-woman-face-white-background-beautiful-woman-portrait-pretty-woman-face-white-background-beautiful-woman-portrait-188592492.jpg"
+    image: "https://thumbs.dreamstime.com/z/pretty-woman-face-white-background-beautiful-woman-portrait-pretty-woman-face-white-background-beautiful-woman-portrait-188592492.jpg"
   },
   {
     id: 5,
@@ -39,7 +39,7 @@ const notifications = [
     title: "Password Update successfully",
     message: "Your password has been updated successfully",
     time: "Yesterday",
-    image: "httpss://i.pinimg.com/736x/e1/08/a5/e108a56df4dfff6135af75959142f79f.jpg"
+    image: "https://i.pinimg.com/736x/e1/08/a5/e108a56df4dfff6135af75959142f79f.jpg"
   }
 ];
 

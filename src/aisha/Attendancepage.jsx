@@ -2,18 +2,18 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 
 const employees = [
-  { name: "Leasie Watson", designation: "Team Lead - Design", type: "Office", checkIn: "09:27 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/women/1.jpg" },
-  { name: "Darlene Robertson", designation: "Web Designer", type: "Office", checkIn: "10:15 AM", status: "Late", profileImage: "httpss://randomuser.me/api/portraits/women/2.jpg" },
-  { name: "Jacob Jones", designation: "Medical Assistant", type: "Remote", checkIn: "10:24 AM", status: "Late", profileImage: "httpss://randomuser.me/api/portraits/men/1.jpg" },
-  { name: "Kathryn Murphy", designation: "Marketing Coordinator", type: "Office", checkIn: "09:10 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/women/3.jpg" },
-  { name: "Leslie Alexander", designation: "Data Analyst", type: "Office", checkIn: "09:15 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/men/2.jpg" },
-  { name: "Ronald Richards", designation: "Python Developer", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/men/3.jpg" },
-  { name: "Guy Hawkins", designation: "UI/UX Design", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/men/4.jpg" },
-  { name: "Albert Flores", designation: "React JS", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/men/5.jpg" },
-  { name: "Savannah Nguyen", designation: "IOS Developer", type: "Remote", checkIn: "10:50 AM", status: "Late", profileImage: "httpss://randomuser.me/api/portraits/women/4.jpg" },
-  { name: "Marvin McKinney", designation: "HR", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/men/6.jpg" },
-  { name: "Jerome Bell", designation: "Sales Manager", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "httpss://randomuser.me/api/portraits/men/7.jpg" },
-  { name: "Jenny Wilson", designation: "React JS Developer", type: "Remote", checkIn: "11:30 AM", status: "Late", profileImage: "httpss://randomuser.me/api/portraits/women/5.jpg" },
+  { name: "Leasie Watson", designation: "Team Lead - Design", type: "Office", checkIn: "09:27 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/women/1.jpg" },
+  { name: "Darlene Robertson", designation: "Web Designer", type: "Office", checkIn: "10:15 AM", status: "Late", profileImage: "https://randomuser.me/api/portraits/women/2.jpg" },
+  { name: "Jacob Jones", designation: "Medical Assistant", type: "Remote", checkIn: "10:24 AM", status: "Late", profileImage: "https://randomuser.me/api/portraits/men/1.jpg" },
+  { name: "Kathryn Murphy", designation: "Marketing Coordinator", type: "Office", checkIn: "09:10 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/women/3.jpg" },
+  { name: "Leslie Alexander", designation: "Data Analyst", type: "Office", checkIn: "09:15 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/men/2.jpg" },
+  { name: "Ronald Richards", designation: "Python Developer", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/men/3.jpg" },
+  { name: "Guy Hawkins", designation: "UI/UX Design", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/men/4.jpg" },
+  { name: "Albert Flores", designation: "React JS", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/men/5.jpg" },
+  { name: "Savannah Nguyen", designation: "IOS Developer", type: "Remote", checkIn: "10:50 AM", status: "Late", profileImage: "https://randomuser.me/api/portraits/women/4.jpg" },
+  { name: "Marvin McKinney", designation: "HR", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/men/6.jpg" },
+  { name: "Jerome Bell", designation: "Sales Manager", type: "Remote", checkIn: "09:29 AM", status: "On Time", profileImage: "https://randomuser.me/api/portraits/men/7.jpg" },
+  { name: "Jenny Wilson", designation: "React JS Developer", type: "Remote", checkIn: "11:30 AM", status: "Late", profileImage: "https://randomuser.me/api/portraits/women/5.jpg" },
 ];
 
 const AttendancePage = () => {
