@@ -20,6 +20,7 @@ const TicketDetailsForAdmin = () => {
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignedEmployee, setAssignedEmployee] = useState(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [assigning, setAssigning] = useState(false);
 
   useEffect(() => {
     fetchTicketDetails();
@@ -74,6 +75,7 @@ const TicketDetailsForAdmin = () => {
 
   const assignTicket = async (employeeId, employeeName) => {
     try {
+      setAssigning(true);
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
         `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}&id=${employeeId}`,
@@ -93,8 +95,12 @@ const TicketDetailsForAdmin = () => {
       setShowSuccessModal(true);
     } catch (error) {
       toast.error(error.message || 'Error assigning ticket');
+    } finally {
+      setAssigning(false);
     }
+
   };
+
 
   return (
     <div className="flex h-screen bg-gray-100 text-base">
@@ -138,6 +144,15 @@ const TicketDetailsForAdmin = () => {
                 <h3 className="text-xl font-semibold text-gray-800">Comment:</h3>
                 <p className="text-gray-600">{ticket.comment || 'No comments yet.'}</p>
               </div>
+              <Dialog.Root open={assigning}>
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
+                  <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+                    <img src="/loading.gif" alt="Loading" className="w-16 h-16" />
+                    <p className="mt-4 text-lg font-medium text-gray-700">Assigning ticket...</p>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
 
               {/* Ticket Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mt-8">
@@ -195,15 +210,17 @@ const TicketDetailsForAdmin = () => {
       {/* Assign Modal */}
       <Dialog.Root open={showAssignModal} onOpenChange={setShowAssignModal}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
-          <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg w-[500px] h-[400px] overflow-y-auto">
-            <Dialog.Title className="text-xl font-bold mb-4">Select Employee</Dialog.Title>
-            <ul className="space-y-2">
+          <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
+          <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-2xl shadow-2xl w-[40vw] max-w-lg h-[80vh] max-h-[700px] overflow-y-auto">
+            <Dialog.Title className="text-2xl font-bold mb-4 text-center">
+              Select An IT Personnel
+            </Dialog.Title>
+            <ul className="space-y-3">
               {employees.length > 0 ? (
-                employees.map(emp => (
+                employees.map((emp) => (
                   <li
                     key={emp.id}
-                    className="p-3 border rounded-lg shadow-sm cursor-pointer bg-gray-100 hover:bg-gray-200 transition"
+                    className="p-4 border border-gray-300 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition-all duration-200 ease-in-out text-black"
                     onClick={() => assignTicket(emp.id, `${emp.first_name} ${emp.last_name}`)}
                   >
                     <p className="text-lg font-semibold">{emp.first_name} {emp.last_name}</p>
@@ -211,15 +228,20 @@ const TicketDetailsForAdmin = () => {
                   </li>
                 ))
               ) : (
-                <p className="text-gray-600 text-center">No IT personnel found.</p>
+                <p className="text-gray-500 text-center py-4">No IT personnel found.</p>
               )}
             </ul>
-            <Dialog.Close className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg w-full">
-              Cancel
-            </Dialog.Close>
+            <div className="flex justify-center mt-6">
+              <Dialog.Close className="bg-blue-900 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200">
+                Cancel
+              </Dialog.Close>
+            </div>
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
+
+
+
 
       {/* Success Modal */}
       <Dialog.Root open={showSuccessModal} onOpenChange={setShowSuccessModal}>

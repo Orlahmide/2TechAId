@@ -14,6 +14,7 @@ const TicketDetailsForIT = () => {
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState('');
   const [status, setStatus] = useState('');
+  const [assigning, setAssigning] = useState(false); // State for loader modal
 
   useEffect(() => {
     fetchTicketDetails();
@@ -57,11 +58,11 @@ const TicketDetailsForIT = () => {
 
   const assignTicket = async () => {
     try {
+      setAssigning(true); // Show loader
       const token = localStorage.getItem('accessToken');
-  
-      // Construct the URL with ticketId and employeeId as query parameters
+
       const response = await fetch(
-        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}`, 
+        `http://localhost:5215/api/ticket/Ticket/assign?ticketId=${ticketId}`,
         {
           method: 'POST',
           headers: {
@@ -70,16 +71,18 @@ const TicketDetailsForIT = () => {
           }
         }
       );
-  
+
       if (!response.ok) throw new Error('Failed to assign ticket');
-  
+
       toast.success('Ticket assigned successfully');
       fetchTicketDetails(); // Refresh data
     } catch (error) {
       toast.error(error.message || 'Error assigning ticket');
+    } finally {
+      setAssigning(false); // Hide loader
     }
   };
-  
+
 
 
   const [isResolved, setIsResolved] = useState(false);
@@ -169,6 +172,16 @@ const TicketDetailsForIT = () => {
                   )}
                 </div>
               )}
+
+              <Dialog.Root open={assigning}>
+                <Dialog.Portal>
+                  <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50" />
+                  <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+                    <img src="/loading.gif" alt="Loading" className="w-16 h-16" />
+                    <p className="mt-4 text-lg font-medium text-gray-700">Assigning ticket...</p>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
 
               {/* Ticket Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mt-8">

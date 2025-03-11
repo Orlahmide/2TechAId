@@ -44,11 +44,6 @@ import PayrollPage from "./aisha/Payroll";
             <Route path="/create-account" element={<CreateAccount />} />
             <Route path="/create-account_it" element={<CreateAccountITPersonnel/>} />
             <Route path="/create-account_admin" element={<CreateAccountAdmin/>} />
-            <Route path="/notification" element={<NotificationsPage/>} />
-              <Route path="/attendance" element={<AttendancePage/>} />
-              <Route path="/payroll" element={<PayrollPage/>} />
-
-            
             {/* Protected Routes */}
             <Route element={<PrivateRoute/>}>
               <Route path="/dashboard" element={<Dashboard />} />
