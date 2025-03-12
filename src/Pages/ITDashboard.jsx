@@ -30,54 +30,50 @@ const IT_PERSONNEL = () => {
         toast.error('User not authenticated');
         return;
       }
-
+  
       let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
       if (filter === 'set' && selectedDate) {
         const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
         url += `&date=${formattedDate}`;
       }
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
+  
+      // Fetch both responses in parallel
+      const [response, notActiveResponse] = await Promise.all([
+        fetch(url, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+      ]);
+  
+      if (!response.ok || !notActiveResponse.ok) {
         throw new Error('Failed to fetch ticket stats');
       }
-
+  
       const data = await response.json();
-      setTicketStats(prevStats => ({
-        ...prevStats,
+      const notActiveData = await notActiveResponse.json();
+  
+      // Update state once with all data
+      setTicketStats({
         totalNumber: data.totalNumber,
         activeNumber: data.activelNumber, // Fixed typo
         completedNumber: data.completedNumber,
-      }));
-
-      const notActiveResponse = await fetch(`https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!notActiveResponse.ok) {
-        throw new Error('Failed to fetch NOT_ACTIVE ticket count');
-      }
-
-      const notActiveData = await notActiveResponse.json();
-      setTicketStats(prevStats => ({
-        ...prevStats,
         notActiveNumber: notActiveData.notActiveNumber || 0,
-      }));
+      });
     } catch (error) {
       toast.error(error.message || 'Failed to load ticket stats');
     }
   };
+  
 
   const fetchLatestTickets = async () => {
     try {
@@ -110,6 +106,7 @@ const IT_PERSONNEL = () => {
   useEffect(() => {
     fetchLatestTickets();
     fetchTicketData();
+
   }, [filter, selectedDate]);
 
   return (

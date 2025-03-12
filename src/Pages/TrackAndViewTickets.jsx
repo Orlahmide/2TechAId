@@ -33,13 +33,19 @@ const TrackAndViewTickets = () => {
     const params = new URLSearchParams();
     params.set('filter', newFilter);
     if (newFilter === 'set' && newDate) {
-      params.set('date', newDate.toISOString().split('T')[0]); // Format YYYY-MM-DD
+      params.set('date', newDate.getFullYear() + '-' + 
+    String(newDate.getMonth() + 1).padStart(2, '0') + '-' + 
+    String(newDate.getDate()).padStart(2, '0'));
     }
     if (newStatus) {
       params.set('status', newStatus);
     }
-    setSearchParams(params); // Update the URL with new parameters
+    setSearchParams(params);
   };
+
+  useEffect(() => {
+    updateURLParams(filter, selectedDate, selectedStatus);
+  }, [selectedDate]);
 
   const fetchTicketStats = async () => {
     try {
@@ -87,7 +93,10 @@ const TrackAndViewTickets = () => {
         url += `&status=${selectedStatus}`;
       }
       if (filter === 'set' && selectedDate) {
-        const formattedDate = selectedDate.toISOString().split('T')[0];
+        const formattedDate = selectedDate.getFullYear() + '-' + 
+        String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+        String(selectedDate.getDate()).padStart(2, '0');
+    
         url += `&date=${formattedDate}`;
       }
 

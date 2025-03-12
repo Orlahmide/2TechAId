@@ -33,47 +33,57 @@ const TrackAndViewTicketsAdmin = () => {
     const params = new URLSearchParams();
     params.set('filter', newFilter);
     if (newFilter === 'set' && newDate) {
-      params.set('date', newDate.toISOString().split('T')[0]); // Format YYYY-MM-DD
+      params.set('date', newDate.getFullYear() + '-' + 
+    String(newDate.getMonth() + 1).padStart(2, '0') + '-' + 
+    String(newDate.getDate()).padStart(2, '0'));
     }
     if (newStatus) {
       params.set('status', newStatus);
     }
     setSearchParams(params);
   };
+  useEffect(() => {
+    if (selectedDate) {
+      updateURLParams(filter, selectedDate, selectedStatus);
+    }
+  }, [selectedDate]);
+  
 
   const fetchTicketStats = async () => {
     try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        toast.error('User not authenticated');
-        return;
-      }
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            toast.error('User not authenticated');
+            return;
+        }
 
-      let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
-      if (filter === 'set' && selectedDate) {
-        const formattedDate = selectedDate.toISOString().split('T')[0];
-        url += `&date=${formattedDate}`;
-      }
+        let url = `https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all_by_id?filter=${filter}`;
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+        if (filter === 'set' && selectedDate instanceof Date && !isNaN(selectedDate)) {
+            const formattedDate = 
+                `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
+            url += `&date=${formattedDate}`;
+        }
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch ticket stats');
-      }
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
 
-      const data = await response.json();
-      setTicketStats((prevStats) => ({
-        ...prevStats,
-        totalNumber: data.totalNumber,
-        activelNumber: data.activelNumber,
-        completedNumber: data.completedNumber,
-      }));
+        if (!response.ok) {
+            throw new Error('Failed to fetch ticket stats');
+        }
+
+        const data = await response.json();
+        setTicketStats((prevStats) => ({
+            ...prevStats,
+            totalNumber: data.totalNumber,
+            activeNumber: data.activelNumber, // Fixed typo
+            completedNumber: data.completedNumber,
+        }));
 
       // Now fetch the 'notActiveNumber' from a different endpoint
       const notActiveResponse = await fetch(`https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/count_all?filter=${filter}`, {

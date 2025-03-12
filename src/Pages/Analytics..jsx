@@ -23,13 +23,21 @@ import jsPDF from "jspdf";
 import AdminDashboard from "./AdminDashboard";
 import AdminHeader from "../Components/AdminHeader";
 
+const getTodayDateWAT = () => {
+    const now = new Date();
+    // Convert to WAT (UTC+1) correctly
+    const options = { timeZone: "Africa/Lagos", year: "numeric", month: "2-digit", day: "2-digit" };
+    const formattedDate = new Intl.DateTimeFormat("en-CA", options).format(now);
+    return formattedDate; // YYYY-MM-DD
+};
+
 const API_URL = "https://techaid-001-site1.ptempurl.com/api/ticket/Ticket/analytics";
 
 const Analytics = () => {
     const { user } = useContext(AuthContext);
 
     // State for filters
-    const [filter, setFilter] = useState("week");
+    const [filter, setFilter] = useState("Week");
     const [status, setStatus] = useState("");
     const [priority, setPriority] = useState("");
     const [category, setCategory] = useState("");
@@ -44,6 +52,10 @@ const Analytics = () => {
     // Function to construct dynamic API URL based on filters
     const constructApiUrl = () => {
         let url = `${API_URL}?filter=${filter}`;
+        if (filter === "Day") {
+            const todayWAT = getTodayDateWAT(); // Use adjusted date
+            url += `&date=${todayWAT}`;
+        }
         if (status) url += `&status=${status}`;
         if (priority) url += `&priority=${priority}`;
         if (category) url += `&category=${category}`;
@@ -85,18 +97,25 @@ const Analytics = () => {
         : [];
 
     // Prepare bar chart data for weekly view
-    const barData =
-        filter === "week"
-            ? analyticsData
-                .filter((day) => ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(day.day))
-                .map((day) => ({
-                    day: day.day,
-                    tickets: day.totalTickets,
-                }))
-            : analyticsData.map((week) => ({
-                day: `Week ${week.weekNumber}`,
-                tickets: week.totalTickets,
-            }));
+    const barData = filter === "Day"
+    ? analyticsData.length > 0
+        ? [{
+            day: analyticsData[0].day, // Ensure correct day label
+            tickets: analyticsData[0].totalTickets
+        }]
+        : []
+    : filter === "Week"
+    ? analyticsData
+        .filter((day) => ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(day.day))
+        .map((day) => ({
+            day: day.day,
+            tickets: day.totalTickets,
+        }))
+    : analyticsData.map((week) => ({
+        day: `Week ${week.weekNumber}`,
+        tickets: week.totalTickets,
+    }));
+
 
     // Calculate total tickets for summary card
     const totalTickets = analyticsData.reduce((sum, item) => sum + item.totalTickets, 0);
